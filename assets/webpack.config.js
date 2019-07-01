@@ -50,22 +50,6 @@ module.exports = {
         ]
       },
       {
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 4096,
-            fallback: {
-              loader: 'file-loader',
-              options: {
-                name: 'fonts/[name].[ext]',
-                publicPath: '/'
-              }
-            }
-          }
-        }
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader'
       }
