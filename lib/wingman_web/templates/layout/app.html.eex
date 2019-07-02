@@ -1,30 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Wingman · Phoenix Framework</title>
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
-  </head>
-  <body>
-    <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
-          </ul>
-        </nav>
-        <a href="http://phoenixframework.org/" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
-        </a>
-      </section>
-    </header>
-    <main role="main" class="container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <title>Wingman</title>
+
+  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/vendor/bootstrap/css/bootstrap.min.css") %>">
+  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/vendor/font-awesome/css/font-awesome.min.css") %>">
+  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/vendor/ionicons/css/ionicons.min.css") %>">
+  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/vendor/adminlte/adminlte.min.css") %>">
+  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/vendor/adminlte/skin-blue.min.css") %>">
+  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>">
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+<div class="wrapper">
+  <%= render "_header.html", assigns %>
+  <%= render "_sidebar.html", assigns %>
+
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Page Header
+        <small>Optional description</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+        <li class="active">Here</li>
+      </ol>
+    </section>
+
+    <section class="content container-fluid">
       <%= render @view_module, @view_template, assigns %>
-    </main>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
-  </body>
+    </section>
+  </div>
+
+  <%= render "_footer.html", assigns %>
+</div>
+
+<script>window._csrf_token = '<%= Phoenix.Controller.get_csrf_token() %>'</script>
+<script src="<%= Routes.static_path(@conn, "/vendor/jquery/jquery.min.js") %>"></script>
+<script src="<%= Routes.static_path(@conn, "/vendor/jquery/jquery.slimscroll.min.js") %>"></script>
+<script src="<%= Routes.static_path(@conn, "/vendor/bootstrap/js/bootstrap.min.js") %>"></script>
+<script src="<%= Routes.static_path(@conn, "/vendor/adminlte/adminlte.min.js") %>"></script>
+<script src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+</body>
 </html>

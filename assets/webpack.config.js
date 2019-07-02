@@ -23,7 +23,7 @@ module.exports = {
     alias: {
       '@': __dirname
     },
-    extensions: ['.js', '.json', '.css', '.sass', '.vue']
+    extensions: ['.js', '.json', '.sass', '.vue']
   },
   module: {
     rules: [
@@ -32,14 +32,14 @@ module.exports = {
         exclude: /node_modules/,
         use: 'babel-loader'
       },
-      {
-        test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          { loader: 'css-loader', options: { importLoaders: 1 } },
-          'postcss-loader'
-        ]
-      },
+      // {
+      //   test: /\.css$/,
+      //   use: [
+      //     MiniCssExtractPlugin.loader,
+      //     { loader: 'css-loader', options: { importLoaders: 1 } },
+      //     'postcss-loader'
+      //   ]
+      // },
       {
         test: /\.sass$/,
         use: [
