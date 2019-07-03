@@ -16,7 +16,6 @@
       <td><%= film.desc %></td>
 
       <td>
-        <%= link "Show", to: Routes.movie_film_path(@conn, :show, film) %>
         <%= link "Edit", to: Routes.movie_film_path(@conn, :edit, film) %>
         <%= link "Delete", to: Routes.movie_film_path(@conn, :delete, film), method: :delete, data: [confirm: "Are you sure?"] %>
       </td>

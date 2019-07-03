@@ -19,7 +19,7 @@ defmodule WingmanWeb.Router do
     get "/", PageController, :index
 
     scope "/movie", Movie, as: :movie do
-      resources "/films", FilmController
+      resources "/films", FilmController, except: [:show]
     end
   end
 
