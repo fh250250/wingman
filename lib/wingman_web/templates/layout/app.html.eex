@@ -32,6 +32,7 @@
     </section>
 
     <section class="content container-fluid">
+      <%= flash_messages(@conn) %>
       <%= render @view_module, @view_template, assigns %>
     </section>
   </div>

@@ -1,0 +1,28 @@
+<h1>Listing Films</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Desc</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for film <- @films do %>
+    <tr>
+      <td><%= film.title %></td>
+      <td><%= film.desc %></td>
+
+      <td>
+        <%= link "Show", to: Routes.movie_film_path(@conn, :show, film) %>
+        <%= link "Edit", to: Routes.movie_film_path(@conn, :edit, film) %>
+        <%= link "Delete", to: Routes.movie_film_path(@conn, :delete, film), method: :delete, data: [confirm: "Are you sure?"] %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Film", to: Routes.movie_film_path(@conn, :new) %></span>

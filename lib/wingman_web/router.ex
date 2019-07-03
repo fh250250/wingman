@@ -17,6 +17,10 @@ defmodule WingmanWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    scope "/movie", Movie, as: :movie do
+      resources "/films", FilmController
+    end
   end
 
   # Other scopes may use custom stacks.
