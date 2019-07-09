@@ -20,6 +20,7 @@ defmodule WingmanWeb.Router do
 
     scope "/movie", Movie, as: :movie do
       resources "/films", FilmController, except: [:show]
+      resources "/categories", CategoryController, except: [:show]
     end
   end
 

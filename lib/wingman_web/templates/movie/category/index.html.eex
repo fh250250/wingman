@@ -1,0 +1,25 @@
+<h1>Listing Categories</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for category <- @categories do %>
+    <tr>
+      <td><%= category.title %></td>
+
+      <td>
+        <%= link "Edit", to: Routes.movie_category_path(@conn, :edit, category) %>
+        <%= link "Delete", to: Routes.movie_category_path(@conn, :delete, category), method: :delete, data: [confirm: "Are you sure?"] %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Category", to: Routes.movie_category_path(@conn, :new) %></span>

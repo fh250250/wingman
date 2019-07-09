@@ -8,18 +8,11 @@
           <%= error_tag f, :title %>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="form-group <%= if f.errors[:desc], do: "has-error" %>">
-          <%= label f, :desc, "描述", class: "control-label" %>
-          <%= textarea f, :desc, class: "form-control", rows: 5 %>
-          <%= error_tag f, :desc %>
-        </div>
-      </div>
     </div>
   </div>
 
   <div class="box-footer">
     <%= submit "保存", class: "btn btn-flat btn-primary", style: "margin-right: 10px" %>
-    <%= link "取消", to: Routes.movie_film_path(@conn, :index), class: "btn btn-flat btn-default" %>
+    <%= link "取消", to: Routes.movie_category_path(@conn, :index), class: "btn btn-flat btn-default" %>
   </div>
 <% end %>
