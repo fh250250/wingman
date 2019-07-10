@@ -6,7 +6,7 @@ defmodule Wingman.Movie do
   import Ecto.Query, warn: false
 
   alias Wingman.Repo
-  alias Wingman.Movie.{Film}
+  alias Wingman.Movie.{Film, TagGroup}
 
 
   def list_films do
@@ -33,5 +33,34 @@ defmodule Wingman.Movie do
 
   def change_film(%Film{} = film) do
     Film.changeset(film, %{})
+  end
+
+
+
+
+  def list_tag_groups do
+    Repo.all(TagGroup)
+  end
+
+  def get_tag_group!(id), do: Repo.get!(TagGroup, id)
+
+  def create_tag_group(attrs \\ %{}) do
+    %TagGroup{}
+    |> TagGroup.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_tag_group(%TagGroup{} = tag_group, attrs) do
+    tag_group
+    |> TagGroup.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_tag_group(%TagGroup{} = tag_group) do
+    Repo.delete(tag_group)
+  end
+
+  def change_tag_group(%TagGroup{} = tag_group) do
+    TagGroup.changeset(tag_group, %{})
   end
 end

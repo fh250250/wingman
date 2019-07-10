@@ -63,4 +63,63 @@ defmodule Wingman.MovieTest do
       assert %Ecto.Changeset{} = Movie.change_film(film)
     end
   end
+
+  describe "tag_groups" do
+    alias Wingman.Movie.TagGroup
+
+    @valid_attrs %{title: "some title"}
+    @update_attrs %{title: "some updated title"}
+    @invalid_attrs %{title: nil}
+
+    def tag_group_fixture(attrs \\ %{}) do
+      {:ok, tag_group} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Movie.create_tag_group()
+
+      tag_group
+    end
+
+    test "list_tag_groups/0 returns all tag_groups" do
+      tag_group = tag_group_fixture()
+      assert Movie.list_tag_groups() == [tag_group]
+    end
+
+    test "get_tag_group!/1 returns the tag_group with given id" do
+      tag_group = tag_group_fixture()
+      assert Movie.get_tag_group!(tag_group.id) == tag_group
+    end
+
+    test "create_tag_group/1 with valid data creates a tag_group" do
+      assert {:ok, %TagGroup{} = tag_group} = Movie.create_tag_group(@valid_attrs)
+      assert tag_group.title == "some title"
+    end
+
+    test "create_tag_group/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Movie.create_tag_group(@invalid_attrs)
+    end
+
+    test "update_tag_group/2 with valid data updates the tag_group" do
+      tag_group = tag_group_fixture()
+      assert {:ok, %TagGroup{} = tag_group} = Movie.update_tag_group(tag_group, @update_attrs)
+      assert tag_group.title == "some updated title"
+    end
+
+    test "update_tag_group/2 with invalid data returns error changeset" do
+      tag_group = tag_group_fixture()
+      assert {:error, %Ecto.Changeset{}} = Movie.update_tag_group(tag_group, @invalid_attrs)
+      assert tag_group == Movie.get_tag_group!(tag_group.id)
+    end
+
+    test "delete_tag_group/1 deletes the tag_group" do
+      tag_group = tag_group_fixture()
+      assert {:ok, %TagGroup{}} = Movie.delete_tag_group(tag_group)
+      assert_raise Ecto.NoResultsError, fn -> Movie.get_tag_group!(tag_group.id) end
+    end
+
+    test "change_tag_group/1 returns a tag_group changeset" do
+      tag_group = tag_group_fixture()
+      assert %Ecto.Changeset{} = Movie.change_tag_group(tag_group)
+    end
+  end
 end

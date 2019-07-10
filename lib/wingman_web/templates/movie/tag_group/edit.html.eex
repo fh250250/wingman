@@ -1,0 +1,7 @@
+<div class="box box-primary">
+  <div class="box-header with-border">
+    <div class="box-title">编辑</div>
+  </div>
+
+  <%= render "form.html", Map.put(assigns, :action, Routes.movie_tag_group_path(@conn, :update, @tag_group)) %>
+</div>
