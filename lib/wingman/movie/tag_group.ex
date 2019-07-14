@@ -2,8 +2,12 @@ defmodule Wingman.Movie.TagGroup do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Wingman.Movie.Tag
+
   schema "movie_tag_groups" do
     field :title, :string
+
+    has_many :tags, Tag, foreign_key: :group_id
 
     timestamps()
   end

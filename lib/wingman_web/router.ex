@@ -20,7 +20,7 @@ defmodule WingmanWeb.Router do
 
     scope "/movie", Movie, as: :movie do
       resources "/films", FilmController, except: [:show]
-      resources "/tag_groups", TagGroupController, except: [:show]
+      resources "/tag-groups", TagGroupController, except: [:show]
     end
   end
 

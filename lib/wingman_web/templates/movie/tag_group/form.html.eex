@@ -2,11 +2,8 @@
   <div class="box-body">
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group <%= if f.errors[:title], do: "has-error" %>">
-          <%= label f, :title, "标题", class: "control-label" %>
-          <%= text_input f, :title, class: "form-control" %>
-          <%= error_tag f, :title %>
-        </div>
+        <%= simple_input f, :title, "标题", :text_input %>
+        <%= array_input f, :tags, "标签管理" %>
       </div>
     </div>
   </div>

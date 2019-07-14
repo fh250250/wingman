@@ -40,6 +40,7 @@ defmodule WingmanWeb do
       use Phoenix.HTML
 
       import WingmanWeb.ErrorHelpers
+      import WingmanWeb.FormHelpers
       import WingmanWeb.Gettext
       alias WingmanWeb.Router.Helpers, as: Routes
     end

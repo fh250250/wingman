@@ -2,18 +2,10 @@
   <div class="box-body">
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group <%= if f.errors[:title], do: "has-error" %>">
-          <%= label f, :title, "标题", class: "control-label" %>
-          <%= text_input f, :title, class: "form-control" %>
-          <%= error_tag f, :title %>
-        </div>
+        <%= simple_input f, :title, "标题", :text_input %>
       </div>
       <div class="col-md-6">
-        <div class="form-group <%= if f.errors[:desc], do: "has-error" %>">
-          <%= label f, :desc, "描述", class: "control-label" %>
-          <%= textarea f, :desc, class: "form-control", rows: 5 %>
-          <%= error_tag f, :desc %>
-        </div>
+        <%= simple_input f, :desc, "描述", :textarea, rows: 5 %>
       </div>
     </div>
   </div>
