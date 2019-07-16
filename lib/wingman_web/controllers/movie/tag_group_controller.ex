@@ -29,13 +29,13 @@ defmodule WingmanWeb.Movie.TagGroupController do
   end
 
   def edit(conn, %{"id" => id}) do
-    tag_group = Movie.get_tag_group!(id)
+    tag_group = Movie.get_tag_group!(id, :with_tags)
     changeset = Movie.change_tag_group(tag_group)
     render(conn, "edit.html", tag_group: tag_group, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "tag_group" => tag_group_params}) do
-    tag_group = Movie.get_tag_group!(id)
+    tag_group = Movie.get_tag_group!(id, :with_tags)
 
     case Movie.update_tag_group(tag_group, tag_group_params) do
       {:ok, _tag_group} ->

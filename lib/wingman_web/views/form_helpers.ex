@@ -27,15 +27,4 @@ defmodule WingmanWeb.FormHelpers do
       ]
     end
   end
-
-  def array_input(form, field, label_text) do
-    wrapper_opts = [class: "form-group #{state_class(form, field)}"]
-
-    content_tag :div, wrapper_opts do
-      [
-        label(form, field, label_text),
-        "array_input"
-      ]
-    end
-  end
 end

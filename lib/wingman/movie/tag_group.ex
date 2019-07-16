@@ -7,7 +7,7 @@ defmodule Wingman.Movie.TagGroup do
   schema "movie_tag_groups" do
     field :title, :string
 
-    has_many :tags, Tag, foreign_key: :group_id
+    has_many :tags, Tag, foreign_key: :group_id, on_replace: :delete
 
     timestamps()
   end
@@ -18,5 +18,6 @@ defmodule Wingman.Movie.TagGroup do
     |> cast(attrs, [:title])
     |> validate_required([:title])
     |> unique_constraint(:title)
+    |> cast_assoc(:tags)
   end
 end

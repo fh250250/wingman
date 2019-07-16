@@ -16,7 +16,7 @@ defmodule Wingman.Movie.Tag do
   def changeset(tag, attrs) do
     tag
     |> cast(attrs, [:title, :group_id])
-    |> validate_required([:title, :group_id])
+    |> validate_required([:title])
     |> foreign_key_constraint(:group_id)
     |> unique_constraint(:title, name: :movie_tags_title_group_id_index)
   end
