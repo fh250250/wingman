@@ -14,17 +14,8 @@ defmodule WingmanWeb.ErrorHelpers do
     end)
   end
 
-  def errors_map(form) do
-    form.errors
-    |> Keyword.keys()
-    |> Enum.uniq()
-    |> Enum.reduce(%{}, fn field, acc ->
-      Map.put(
-        acc,
-        field,
-        Keyword.get_values(form.errors, field) |> Enum.map(&translate_error/1)
-      )
-    end)
+  def errors_map(changeset) do
+    Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
   end
 
   @doc """

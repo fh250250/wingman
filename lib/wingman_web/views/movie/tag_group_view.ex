@@ -1,24 +1,31 @@
 defmodule WingmanWeb.Movie.TagGroupView do
   use WingmanWeb, :view
 
-  def tags_input(form) do
+  def tags_input(form, field) do
     list_json =
-    form.impl.to_form(form.source, form, :tags, [])
-    |> Enum.map(fn f -> %{
-      id: input_value(f, :id),
-      title: input_value(f, :title),
-      action: form.source.action,
-      errors: errors_map(f)
-    } end)
-    |> Jason.encode!()
+      form.source
+      |> Ecto.Changeset.get_field(field)
+      |> Enum.map(fn t -> %{
+        id: t.id,
+        title: t.title,
+        action: form.source.action
+      } end)
+      |> Jason.encode!()
+
+    errors_json =
+      form.source
+      |> errors_map()
+      |> Map.get(field)
+      |> Jason.encode!()
 
     content_tag :div, class: "form-group" do
       [
-        label(form, :tags, "标签管理"),
+        label(form, field, "标签管理"),
         content_tag(:div, nil, data: [
           vue: "tags_input",
-          name: "#{form.name}[tags]",
-          list: list_json
+          name: "#{form.name}[#{field}]",
+          list: list_json,
+          errors: errors_json
         ])
       ]
     end
