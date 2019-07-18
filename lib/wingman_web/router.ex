@@ -22,6 +22,10 @@ defmodule WingmanWeb.Router do
       resources "/films", FilmController, except: [:show]
       resources "/tag-groups", TagGroupController, except: [:show]
     end
+
+    scope "/media" do
+      get "/", MediaController, :index
+    end
   end
 
   # Other scopes may use custom stacks.

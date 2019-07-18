@@ -7,6 +7,10 @@
 # General application configuration
 use Mix.Config
 
+config :wingman, Wingman.Media,
+  public_path: "/uploads",
+  upload_path: Path.expand("../priv/uploads", __DIR__)
+
 config :wingman,
   ecto_repos: [Wingman.Repo]
 

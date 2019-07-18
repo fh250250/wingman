@@ -1,0 +1,11 @@
+<div class="box box-primary">
+  <div class="box-header with-border">
+    <div class="box-title">媒体库</div>
+  </div>
+  <div class="box-body">
+    Content Goes Here
+  </div>
+  <div class="box-footer">
+    Footer
+  </div>
+</div>

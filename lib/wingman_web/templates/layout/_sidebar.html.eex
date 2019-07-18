@@ -1,19 +1,20 @@
 <aside class="main-sidebar">
   <section class="sidebar">
     <ul class="sidebar-menu" data-widget="tree">
-      <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-      <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
       <li class="treeview">
-        <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
-          <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+        <a href="#">
+          <i class="fa fa-link"></i>
+          <span>电影管理</span>
+          <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
         </a>
+
         <ul class="treeview-menu">
-          <li><a href="#">Link in level 2</a></li>
-          <li><a href="#">Link in level 2</a></li>
+          <li><a href="<%= Routes.movie_film_path(@conn, :index) %>"><i class="fa fa-circle-o"></i> 影片管理</a></li>
+          <li><a href="<%= Routes.movie_tag_group_path(@conn, :index) %>"><i class="fa fa-circle-o"></i> 标签管理</a></li>
         </ul>
       </li>
+
+      <li><a href="<%= Routes.media_path(@conn, :index) %>"><i class="fa fa-link"></i> <span>媒体库</span></a></li>
     </ul>
   </section>
 </aside>

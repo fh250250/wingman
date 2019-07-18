@@ -1,4 +1,6 @@
 defmodule WingmanWeb.Endpoint do
+  @media_config Application.get_env(:wingman, Wingman.Media)
+
   use Phoenix.Endpoint, otp_app: :wingman
 
   socket "/socket", WingmanWeb.UserSocket,
@@ -14,6 +16,11 @@ defmodule WingmanWeb.Endpoint do
     from: :wingman,
     gzip: false,
     only: ~w(css fonts images js vendor favicon.ico robots.txt)
+
+  # 上传目录静态伺服
+  plug Plug.Static,
+    at: @media_config[:public_path],
+    from: @media_config[:upload_path]
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
