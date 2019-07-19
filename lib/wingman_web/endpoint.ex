@@ -1,7 +1,7 @@
 defmodule WingmanWeb.Endpoint do
-  @media_config Application.get_env(:wingman, Wingman.Media)
-
   use Phoenix.Endpoint, otp_app: :wingman
+
+  @media_config Application.get_env(:wingman, Wingman.Media)
 
   socket "/socket", WingmanWeb.UserSocket,
     websocket: true,

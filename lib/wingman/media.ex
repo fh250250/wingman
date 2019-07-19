@@ -3,13 +3,13 @@ defmodule Wingman.Media do
   媒体库
   """
 
-  @media_config Application.get_env(:wingman, Wingman.Media)
-
   import Ecto.Query, warn: false
 
   alias Wingman.Repo
   alias Wingman.Media.Folder
   alias Wingman.Media.File, as: MediaFile
+
+  @media_config Application.get_env(:wingman, Wingman.Media)
 
   @doc """
   通过 id 获取目录，没有参数则返回根目录

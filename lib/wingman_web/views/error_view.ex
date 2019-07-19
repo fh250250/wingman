@@ -13,4 +13,8 @@ defmodule WingmanWeb.ErrorView do
   def template_not_found(template, _assigns) do
     Phoenix.Controller.status_message_from_template(template)
   end
+
+  def render("error_changeset.json", %{changeset: changeset}) do
+    %{errors: errors_map(changeset)}
+  end
 end

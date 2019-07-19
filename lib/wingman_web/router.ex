@@ -25,6 +25,9 @@ defmodule WingmanWeb.Router do
 
     scope "/media" do
       get "/", MediaController, :index
+      get "/ls", MediaController, :ls
+      post "/mkdir", MediaController, :mkdir
+      post "/upload", MediaController, :upload
     end
   end
 
