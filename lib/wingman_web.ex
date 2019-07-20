@@ -41,6 +41,7 @@ defmodule WingmanWeb do
 
       import WingmanWeb.ErrorHelpers
       import WingmanWeb.FormHelpers
+      import WingmanWeb.WidgetHelpers
       import WingmanWeb.Gettext
       alias WingmanWeb.Router.Helpers, as: Routes
     end

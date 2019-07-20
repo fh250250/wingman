@@ -1,2 +1,2 @@
 
-<div id="media_center"></div>
+<%= vue_widget :media_center %>

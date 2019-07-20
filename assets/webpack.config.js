@@ -23,7 +23,7 @@ module.exports = {
     alias: {
       '@': __dirname
     },
-    extensions: ['.js', '.json', '.sass', '.vue']
+    extensions: ['.js', '.json', '.css', '.sass', '.vue']
   },
   module: {
     rules: [
@@ -32,14 +32,14 @@ module.exports = {
         exclude: /node_modules/,
         use: 'babel-loader'
       },
-      // {
-      //   test: /\.css$/,
-      //   use: [
-      //     MiniCssExtractPlugin.loader,
-      //     { loader: 'css-loader', options: { importLoaders: 1 } },
-      //     'postcss-loader'
-      //   ]
-      // },
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          'postcss-loader'
+        ]
+      },
       {
         test: /\.sass$/,
         use: [
@@ -48,6 +48,22 @@ module.exports = {
           'postcss-loader',
           { loader: 'sass-loader', options: { indentedSyntax: true } }
         ]
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 4096,
+            fallback: {
+              loader: 'file-loader',
+              options: {
+                name: 'fonts/[name].[ext]',
+                publicPath: '/'
+              }
+            }
+          }
+        }
       },
       {
         test: /\.vue$/,
