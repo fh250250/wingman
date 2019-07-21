@@ -1,3 +1,5 @@
+import { includes as _includes } from 'lodash'
+
 export function human_readable_bytes (bytes) {
   const SIZE_UNIT = ['B', 'KB', 'MB', 'GB']
 
@@ -6,4 +8,12 @@ export function human_readable_bytes (bytes) {
       return (bytes / Math.pow(1024, idx)).toFixed(2) + ' ' + SIZE_UNIT[idx]
     }
   }
+}
+
+export function is_image (content_type) {
+  return _includes([
+    'image/png',
+    'image/jpeg',
+    'image/gif',
+  ], content_type)
 }

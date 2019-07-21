@@ -5,7 +5,7 @@
       <el-button icon="el-icon-back" :disabled="path_stack.length < 1" @click="back"/>
 
       <el-button type="primary" icon="el-icon-upload2" @click="$refs.upload.click()"/>
-      <input type="file" style="display: none" ref="upload" @change="handle_upload">
+      <input type="file" multiple style="display: none" ref="upload" @change="handle_upload">
 
       <el-input v-model="create_folder.name"
           :maxlength="32"
@@ -34,15 +34,23 @@
 
   <div class="mc-body">
     <div v-if="folders.length || files.length" class="content-view">
-      <div v-for="f of folders" :key="`folder-${f.id}`" class="folder" @click="cd(f)">
-        <div class="icon el-icon-folder"/>
-        <div class="name">{{ f.name }}</div>
+      <div v-for="f of folders" :key="`folder-${f.id}`" class="content-item folder">
+        <div class="item-header" @click="cd(f)">
+          <div class="icon el-icon-folder"/>
+        </div>
+        <div class="item-body">
+          <div class="name">{{ f.name }}</div>
+        </div>
       </div>
 
-      <div v-for="f of files" :key="`file-${f.id}`" class="file">
-        <el-image v-if="is_image(f)" :src="f.path" fit="cover"/>
-        <div v-else class="icon el-icon-document"/>
-        <div class="name">{{ f.name }}</div>
+      <div v-for="f of files" :key="`file-${f.id}`" class="content-item">
+        <div class="item-header">
+          <el-image v-if="$helper.is_image(f.content_type)" :src="f.path" fit="cover"/>
+          <div v-else class="icon el-icon-document"/>
+        </div>
+        <div class="item-body">
+          <div class="name">{{ f.name }}</div>
+        </div>
       </div>
     </div>
     <div v-else class="no-content">暂无内容</div>
@@ -52,9 +60,11 @@
 
 <script>
 import axios from 'axios'
-import { last as _last, get as _get, includes as _includes } from 'lodash'
+import { last as _last, get as _get } from 'lodash'
 
 export default {
+  inject: ['media_center'],
+
   data () {
     return {
       loading: false,
@@ -134,31 +144,12 @@ export default {
     },
 
     async handle_upload (ev) {
-      const form_data = new FormData()
+      ev.target.files
+        .forEach(file => this.media_center.$refs.task_list.add_task(this.current_folder_id, file))
 
-      if (this.current_folder_id) {
-        form_data.append('folder_id', this.current_folder_id)
-      }
+      ev.target.value = null
 
-      form_data.append('file', ev.target.files[0])
-
-      const { data } = await axios.post('/media/upload', form_data)
-
-      if (data.errors) {
-        this.$message.error('上传失败')
-      } else {
-        this.$message.success('上传成功')
-        ev.target.value = null
-        this.load()
-      }
-    },
-
-    is_image (file) {
-      return _includes([
-        'image/png',
-        'image/jpeg',
-        'image/gif',
-      ], file.content_type)
+      this.$message.success('上传任务已添加')
     }
   }
 }
@@ -179,7 +170,7 @@ export default {
         &:not(:last-child)
           margin-right: 15px
   .breadcrumb
-    margin: 20px 0
+    margin: 20px 0 15px 0
     border-radius: 0
     li:not(.active)
       cursor: pointer
@@ -199,29 +190,35 @@ export default {
       user-select: none
       display: flex
       flex-wrap: wrap
-      > div
+      .content-item
         margin: 5px
         box-sizing: border-box
         width: 120px
-        padding: 10px
         border: 1px solid #eee
         line-height: 1
         transition: all .3s
         &:hover
-          background: #eee
-      .folder
-        cursor: pointer
-      .icon
-        display: block
-        font-size: 48px
-        text-align: center
-      .el-image
-        display: block
-        height: 60px
-      .name
-        font-size: 12px
-        text-align: center
-        white-space: nowrap
-        overflow: hidden
-        text-overflow: ellipsis
+          background: #fcfcfc
+        &.folder .item-header
+          cursor: pointer
+        .item-header
+          height: 72px
+          display: flex
+          justify-content: center
+          align-items: center
+          border-bottom: 1px solid #eee
+          .el-image
+            display: block
+            width: 100%
+            height: 100%
+          .icon
+            font-size: 48px
+        .item-body
+          padding: 10px
+          .name
+            font-size: 12px
+            text-align: center
+            white-space: nowrap
+            overflow: hidden
+            text-overflow: ellipsis
 </style>

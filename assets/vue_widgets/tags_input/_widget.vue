@@ -24,6 +24,13 @@
 import { get as _get } from 'lodash'
 
 export default {
+  data () {
+    return {
+      list: [],
+      name: ''
+    }
+  },
+
   methods: {
     state_class (item, field) {
       if (item.action) {
