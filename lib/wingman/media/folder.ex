@@ -3,6 +3,7 @@ defmodule Wingman.Media.Folder do
   import Ecto.Changeset
 
   alias Wingman.Media.File, as: MediaFile
+  alias Wingman.Media.Upload
 
   schema "media_folders" do
     field :name, :string
@@ -10,6 +11,7 @@ defmodule Wingman.Media.Folder do
     belongs_to :parent, __MODULE__
     has_many :folders, __MODULE__, foreign_key: :parent_id, references: :id
     has_many :files, MediaFile
+    has_many :uploads, Upload
 
     timestamps()
   end
