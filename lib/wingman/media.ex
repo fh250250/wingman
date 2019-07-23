@@ -6,7 +6,7 @@ defmodule Wingman.Media do
   import Ecto.Query, warn: false
 
   alias Wingman.Repo
-  alias Wingman.Media.Folder
+  alias Wingman.Media.{Folder, Upload, UploadChunk}
   alias Wingman.Media.File, as: MediaFile
 
   @media_config Application.get_env(:wingman, Wingman.Media)
@@ -101,5 +101,125 @@ defmodule Wingman.Media do
     |> :crypto.strong_rand_bytes()
     |> Base.url_encode64(padding: false)
     |> binary_part(0, length)
+  end
+
+
+
+
+  @doc """
+  获取或者创建一个上传任务
+  """
+  def get_or_create_upload(%Folder{} = folder, %{"md5" => md5} = attrs) do
+    folder
+    |> Ecto.assoc(:uploads)
+    |> where(md5: ^md5)
+    |> Repo.one()
+    |> case do
+      nil -> create_upload(folder, attrs)
+      upload -> {:ok, get_upload_status(upload)}
+    end
+  end
+
+  defp create_upload(%Folder{} = folder, attrs) do
+    folder
+    |> Ecto.build_assoc(:uploads)
+    |> Upload.changeset(attrs)
+    |> Repo.insert()
+    |> case do
+      {:ok, upload} -> {:ok, get_upload_status(upload)}
+      error -> error
+    end
+  end
+
+  defp get_upload_status(%Upload{} = upload) do
+    chunk_count = ceil(upload.size / upload.chunk_size)
+    loaded_numbers =
+      upload
+      |> Ecto.assoc(:chunks)
+      |> select([c], c.number)
+      |> Repo.all()
+
+    chunks =
+      1..chunk_count
+      |> Enum.map(fn number ->
+        if number in loaded_numbers do
+          %{number: number, loaded: true}
+        else
+          size =
+            if number == chunk_count do
+              upload.size - (number - 1) * upload.chunk_size
+            else
+              upload.chunk_size
+            end
+
+          %{number: number,
+            loaded: false,
+            offset: (number - 1) * upload.chunk_size,
+            size: size}
+        end
+      end)
+
+    %{upload: upload, chunks: chunks}
+  end
+
+
+
+
+  @doc """
+  保存分块
+  """
+  def save_chunk(%{number: number, upload_id: upload_id}, %Plug.Upload{path: filepath}) do
+    path = random_string(32)
+    destpath = Path.join([@media_config[:chunk_path], path])
+    changeset = UploadChunk.changeset(%UploadChunk{}, %{number: number, path: path, upload_id: upload_id})
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:create_chunk, changeset)
+    |> Ecto.Multi.run(:write_chunk, fn _repo, _changes ->
+      with :ok <- Path.dirname(destpath) |> File.mkdir_p(),
+           :ok <- File.rename(filepath, destpath)
+      do
+        {:ok, nil}
+      else
+        _ -> {:error, "写入分块失败"}
+      end
+    end)
+    |> Repo.transaction()
+  end
+
+  @doc """
+  合并分块
+  """
+  def combine_chunks(upload_id) do
+    with upload when not is_nil(upload) <- Upload |> Repo.get(upload_id) |> Repo.preload([:chunks, :folder]),
+         chunk_count <- ceil(upload.size / upload.chunk_size),
+         true <- length(upload.chunks) == chunk_count
+    do
+      do_combine_chunks(upload)
+    else
+      _ -> {:error, "分块不全, 无法合并"}
+    end
+  end
+
+  defp do_combine_chunks(%Upload{} = upload) do
+    filename = upload.filename
+    content_type = MIME.from_path(filename)
+    combine_filepath = Path.join([@media_config[:chunk_path], random_string(32)])
+
+    # 合并成一个大文件
+    upload.chunks
+    |> Enum.sort_by(&Map.get(&1, :number))
+    |> Enum.map(&File.stream!(&1.path, [], 8 * 1024))
+    |> Stream.concat()
+    |> Stream.into(File.stream!(combine_filepath, [:write], 8 * 1024))
+    |> Stream.run()
+
+    # 删除所有分块文件
+    Enum.each(upload.chunks, &File.rm(&1.path))
+
+    # 删除上传任务及所有分块，有外键约束，这里只删除上传任务即可
+    Repo.delete!(upload)
+
+
   end
 end

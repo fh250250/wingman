@@ -9,7 +9,8 @@ use Mix.Config
 
 config :wingman, Wingman.Media,
   public_path: "/uploads",
-  upload_path: Path.expand("../priv/uploads", __DIR__)
+  upload_path: Path.expand("../priv/uploads", __DIR__),
+  chunk_path: Path.expand("../priv/upload_chunks", __DIR__)
 
 config :wingman,
   ecto_repos: [Wingman.Repo]
