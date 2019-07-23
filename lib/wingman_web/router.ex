@@ -28,6 +28,9 @@ defmodule WingmanWeb.Router do
       get "/ls", MediaController, :ls
       post "/mkdir", MediaController, :mkdir
       post "/upload", MediaController, :upload
+      post "/upload/task", MediaController, :upload_task
+      post "/upload/chunk", MediaController, :upload_chunk
+      post "/upload/combine", MediaController, :upload_combine
     end
   end
 

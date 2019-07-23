@@ -3,7 +3,7 @@ defmodule WingmanWeb.MediaController do
 
   alias Wingman.Media
 
-  @ensure_folder_actions [:ls, :mkdir, :upload]
+  @ensure_folder_actions [:ls, :mkdir, :upload, :upload_task]
 
   def action(conn, _) do
     cond do
@@ -55,6 +55,43 @@ defmodule WingmanWeb.MediaController do
         |> put_view(WingmanWeb.ErrorView)
         |> render("error_changeset.json", changeset: changeset)
       {:error, _, reason, _} ->
+        json(conn, %{errors: reason})
+    end
+  end
+
+  def upload_task(conn, %{"upload" => upload_params}, folder) do
+    case Media.get_or_create_upload(folder, upload_params) do
+      {:ok, %{upload: upload, chunks: chunks}} ->
+        json(conn, %{upload_id: upload.id, chunks: chunks})
+      {:error, changeset} ->
+        conn
+        |> put_view(WingmanWeb.ErrorView)
+        |> render("error_changeset.json", changeset: changeset)
+    end
+  end
+
+  def upload_chunk(conn, %{"number" => number, "upload_id" => upload_id, "chunk" => %Plug.Upload{} = chunk}) do
+    case Media.save_chunk(%{number: number, upload_id: upload_id}, chunk) do
+      {:ok, %{create_chunk: new_chunk}} ->
+        json(conn, %{id: new_chunk.id, number: new_chunk.number})
+      {:error, :create_chunk, changeset, _} ->
+        conn
+        |> put_view(WingmanWeb.ErrorView)
+        |> render("error_changeset.json", changeset: changeset)
+      {:error, _, reason, _} ->
+        json(conn, %{errors: reason})
+    end
+  end
+
+  def upload_combine(conn, %{"upload_id" => upload_id}) do
+    case Media.combine_chunks(upload_id) do
+      {:ok, new_file} ->
+        render(conn, "file.json", file: new_file)
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_view(WingmanWeb.ErrorView)
+        |> render("error_changeset.json", changeset: changeset)
+      {:error, reason} ->
         json(conn, %{errors: reason})
     end
   end

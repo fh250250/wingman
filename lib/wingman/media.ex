@@ -202,24 +202,29 @@ defmodule Wingman.Media do
   end
 
   defp do_combine_chunks(%Upload{} = upload) do
-    filename = upload.filename
-    content_type = MIME.from_path(filename)
     combine_filepath = Path.join([@media_config[:chunk_path], random_string(32)])
 
     # 合并成一个大文件
     upload.chunks
-    |> Enum.sort_by(&Map.get(&1, :number))
-    |> Enum.map(&File.stream!(&1.path, [], 8 * 1024))
+    |> Enum.sort_by(&(&1.number))
+    |> Enum.map(&File.stream!(Path.join([@media_config[:chunk_path], &1.path]), [], 8 * 1024))
     |> Stream.concat()
     |> Stream.into(File.stream!(combine_filepath, [:write], 8 * 1024))
     |> Stream.run()
 
     # 删除所有分块文件
-    Enum.each(upload.chunks, &File.rm(&1.path))
+    Enum.each(upload.chunks, &File.rm(Path.join([@media_config[:chunk_path], &1.path])))
 
     # 删除上传任务及所有分块，有外键约束，这里只删除上传任务即可
     Repo.delete!(upload)
 
-
+    # 保存大文件，这里直接构造一个 Plug.Upload 来复用逻辑
+    upload.folder
+    |> save_file(%Plug.Upload{filename: upload.filename, content_type: MIME.from_path(upload.filename), path: combine_filepath})
+    |> case do
+      {:ok, %{create_file: new_file}} -> {:ok, new_file}
+      {:error, :create_file, changeset, _} -> {:error, changeset}
+      {:error, _, reason, _} -> {:error, reason}
+    end
   end
 end
