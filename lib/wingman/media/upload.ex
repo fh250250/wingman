@@ -19,7 +19,7 @@ defmodule Wingman.Media.Upload do
   @doc false
   def changeset(upload, attrs) do
     upload
-    |> cast(attrs, [:md5, :filename, :size, :chunk_size, :folder_id])
+    |> cast(attrs, [:md5, :filename, :size, :folder_id])
     |> validate_required([:md5, :filename, :size])
     |> validate_number(:size, greater_than: 0)
     |> validate_number(:chunk_size, greater_than: 0)

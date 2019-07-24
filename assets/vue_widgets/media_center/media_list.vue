@@ -149,7 +149,7 @@ export default {
 
       ev.target.value = null
 
-      this.$message.success('上传任务已添加')
+      this.$message.success('已添加至上传队列')
     }
   }
 }
