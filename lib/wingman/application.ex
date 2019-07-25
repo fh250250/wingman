@@ -11,9 +11,10 @@ defmodule Wingman.Application do
       # Start the Ecto repository
       Wingman.Repo,
       # Start the endpoint when the application starts
-      WingmanWeb.Endpoint
+      WingmanWeb.Endpoint,
       # Starts a worker by calling: Wingman.Worker.start_link(arg)
       # {Wingman.Worker, arg},
+      Wingman.Media.Cleaner
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -175,6 +175,7 @@ defmodule Wingman.Media do
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:create_chunk, changeset)
+    |> Ecto.Multi.update_all(:touch_upload, where(Upload, id: ^upload_id), set: [updated_at: NaiveDateTime.utc_now()])
     |> Ecto.Multi.run(:write_chunk, fn _repo, _changes ->
       with :ok <- Path.dirname(destpath) |> File.mkdir_p(),
            :ok <- File.rename(filepath, destpath)
@@ -212,11 +213,7 @@ defmodule Wingman.Media do
     |> Stream.into(File.stream!(combine_filepath, [:write], 8 * 1024))
     |> Stream.run()
 
-    # 删除所有分块文件
-    Enum.each(upload.chunks, &File.rm(Path.join([@media_config[:chunk_path], &1.path])))
-
-    # 删除上传任务及所有分块，有外键约束，这里只删除上传任务即可
-    Repo.delete!(upload)
+    delete_upload(upload)
 
     # 保存大文件，这里直接构造一个 Plug.Upload 来复用逻辑
     upload.folder
@@ -226,5 +223,16 @@ defmodule Wingman.Media do
       {:error, :create_file, changeset, _} -> {:error, changeset}
       {:error, _, reason, _} -> {:error, reason}
     end
+  end
+
+  @doc """
+  删除上传任务及分块和文件
+  """
+  def delete_upload(%Upload{} = upload) do
+    # 删除所有分块文件
+    Enum.each(upload.chunks, &File.rm(Path.join([@media_config[:chunk_path], &1.path])))
+
+    # 删除上传任务及所有分块，有外键约束，这里只删除上传任务即可
+    Repo.delete!(upload)
   end
 end
