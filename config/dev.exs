@@ -27,6 +27,8 @@ config :wingman, WingmanWeb.Endpoint,
       "development",
       "--watch-stdin",
       "--color",
+      "--display",
+      "minimal",
       cd: Path.expand("../assets", __DIR__)
     ]
   ]
