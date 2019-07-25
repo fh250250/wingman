@@ -39,7 +39,7 @@
           <div class="icon el-icon-folder"/>
         </div>
         <div class="item-body">
-          <div class="name">{{ f.name }}</div>
+          <div class="name" :title="f.name">{{ f.name }}</div>
         </div>
       </div>
 
@@ -49,7 +49,7 @@
           <div v-else class="icon el-icon-document"/>
         </div>
         <div class="item-body">
-          <div class="name">{{ f.name }}</div>
+          <div class="name" :title="f.name">{{ f.name }}</div>
         </div>
       </div>
     </div>
