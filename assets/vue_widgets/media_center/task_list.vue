@@ -262,10 +262,13 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
-.task-list
-  /deep/
+<style lang="scss" scoped>
+.task-list {
+  /deep/ {
     .el-progress-bar__outer,
-    .el-progress-bar__inner
-      border-radius: 0
+    .el-progress-bar__inner {
+      border-radius: 0;
+    }
+  }
+}
 </style>

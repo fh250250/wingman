@@ -23,7 +23,7 @@ module.exports = {
     alias: {
       '@': __dirname
     },
-    extensions: ['.js', '.json', '.css', '.sass', '.vue']
+    extensions: ['.js', '.json', '.css', '.scss', '.vue']
   },
   module: {
     rules: [
@@ -41,12 +41,12 @@ module.exports = {
         ]
       },
       {
-        test: /\.sass$/,
+        test: /\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,
           { loader: 'css-loader', options: { importLoaders: 1 } },
           'postcss-loader',
-          { loader: 'sass-loader', options: { indentedSyntax: true } }
+          'sass-loader'
         ]
       },
       {

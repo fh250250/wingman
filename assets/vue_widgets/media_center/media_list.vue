@@ -155,70 +155,80 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
-.mc-list
-  .mc-header
-    display: flex
-    justify-content: space-between
-    align-items: center
+<style lang="scss" scoped>
+.mc-list {
+  .mc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     .header-left,
-    .header-right
-      display: flex
-      align-items: center
-      > *
-        margin: 0
-        &:not(:last-child)
-          margin-right: 15px
-  .breadcrumb
-    margin: 20px 0 15px 0
-    border-radius: 0
-    li:not(.active)
-      cursor: pointer
-  .mc-body
-    height: 500px
-    overflow: auto
-    position: relative
-    .no-content
-      font-size: 36px
-      text-align: center
-      color: grey
-      position: absolute
-      top: 50%
-      left: 50%
-      transform: translate(-50%, -50%)
-    .content-view
-      user-select: none
-      display: flex
-      flex-wrap: wrap
-      .content-item
-        margin: 5px
-        box-sizing: border-box
-        width: 120px
-        border: 1px solid #eee
-        line-height: 1
-        transition: all .3s
-        &:hover
-          background: #fcfcfc
-        &.folder .item-header
-          cursor: pointer
-        .item-header
-          height: 72px
-          display: flex
-          justify-content: center
-          align-items: center
-          border-bottom: 1px solid #eee
-          .el-image
-            display: block
-            width: 100%
-            height: 100%
-          .icon
-            font-size: 48px
-        .item-body
-          padding: 10px
-          .name
-            font-size: 12px
-            text-align: center
-            white-space: nowrap
-            overflow: hidden
-            text-overflow: ellipsis
+    .header-right {
+      display: flex;
+      align-items: center;
+      > * {
+        margin: 0;
+        &:not(:last-child) { margin-right: 15px; }
+      }
+    }
+  }
+  .breadcrumb {
+    margin: 20px 0 15px 0;
+    border-radius: 0;
+    li:not(.active) { cursor: pointer; }
+  }
+  .mc-body {
+    height: 500px;
+    overflow: auto;
+    position: relative;
+    .no-content {
+      font-size: 36px;
+      text-align: center;
+      color: grey;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .content-view {
+      user-select: none;
+      display: flex;
+      flex-wrap: wrap;
+      .content-item {
+        margin: 5px;
+        box-sizing: border-box;
+        width: 120px;
+        border: 1px solid #eee;
+        line-height: 1;
+        transition: all .3s;
+        &:hover { background: #fcfcfc; }
+        &.folder .item-header { cursor: pointer; }
+        .item-header {
+          height: 72px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-bottom: 1px solid #eee;
+          .el-image {
+            display: block;
+            width: 100%;
+            height: 100%;
+          }
+          .icon {
+            font-size: 48px;
+          }
+        }
+        .item-body {
+          padding: 10px;
+          .name {
+            font-size: 12px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+    }
+  }
+}
 </style>

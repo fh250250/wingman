@@ -55,14 +55,18 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
-.tags-input
-  .tag-item
-    display: flex
-    align-items: flex-start
-    .field-title
-      margin-right: 20px
-      flex: 1 1 auto
-  .help-block
-    margin-bottom: 0
+<style lang="scss" scoped>
+.tags-input {
+  .tag-item {
+    display: flex;
+    align-items: flex-start;
+    .field-title {
+      margin-right: 20px;
+      flex: 1 1 auto;
+    }
+  }
+  .help-block {
+    margin-bottom: 0;
+  }
+}
 </style>
