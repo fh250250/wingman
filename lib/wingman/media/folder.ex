@@ -20,8 +20,16 @@ defmodule Wingman.Media.Folder do
   def changeset(folder, attrs) do
     folder
     |> cast(attrs, [:name, :parent_id])
-    |> validate_required([:name])
+    |> validate_required([:name, :parent_id])
     |> foreign_key_constraint(:parent_id)
     |> unique_constraint(:name, name: :media_folders_name_parent_id_index)
+  end
+
+  def delete_changeset(folder) do
+    folder
+    |> change()
+    |> no_assoc_constraint(:folders)
+    |> no_assoc_constraint(:files)
+    |> no_assoc_constraint(:uploads)
   end
 end

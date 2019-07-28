@@ -41,6 +41,24 @@ defmodule Wingman.Media do
     |> Repo.preload([:folders, :files])
   end
 
+  @doc """
+  更新目录
+  """
+  def update_folder(%Folder{} = folder, attrs) do
+    folder
+    |> Folder.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  删除目录
+  """
+  def delete_folder(%Folder{} = folder) do
+    folder
+    |> Folder.delete_changeset()
+    |> Repo.delete()
+  end
+
 
 
 
@@ -101,6 +119,37 @@ defmodule Wingman.Media do
     |> :crypto.strong_rand_bytes()
     |> Base.url_encode64(padding: false)
     |> binary_part(0, length)
+  end
+
+  @doc """
+  通过 id 获取文件
+  """
+  def get_file(id), do: Repo.get(MediaFile, id)
+
+  @doc """
+  更新文件
+  """
+  def update_file(%MediaFile{} = file, attrs) do
+    file
+    |> MediaFile.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  删除文件
+  """
+  def delete_file(%MediaFile{} = file) do
+    Ecto.Multi.new()
+    |> Ecto.Multi.delete(:delete_file, file)
+    |> Ecto.Multi.run(:remove_file, fn _repo, _changes ->
+      Path.join([@media_config[:upload_path], file.path])
+      |> File.rm()
+      |> case do
+        :ok -> {:ok, nil}
+        {:error, _} -> {:error, "删除文件失败"}
+      end
+    end)
+    |> Repo.transaction()
   end
 
 

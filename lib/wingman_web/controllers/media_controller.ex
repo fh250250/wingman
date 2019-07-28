@@ -2,6 +2,8 @@ defmodule WingmanWeb.MediaController do
   use WingmanWeb, :controller
 
   alias Wingman.Media
+  alias Wingman.Media.Folder
+  alias Wingman.Media.File, as: MediaFile
 
   @ensure_folder_actions [:ls, :mkdir, :upload, :upload_task]
 
@@ -39,6 +41,38 @@ defmodule WingmanWeb.MediaController do
     case Media.create_folder(folder, folder_params) do
       {:ok, new_folder} ->
         render(conn, "folder.json", folder: new_folder)
+      {:error, changeset} ->
+        conn
+        |> put_view(WingmanWeb.ErrorView)
+        |> render("error_changeset.json", changeset: changeset)
+    end
+  end
+
+  def update_folder(conn, %{"id" => id, "folder" => folder_params}) do
+    with %Folder{} = folder <- Media.get_folder(id),
+         false <- is_nil(folder.parent_id),
+         {:ok, new_folder} <- Media.update_folder(folder, folder_params)
+    do
+      render(conn, "folder.json", folder: new_folder)
+    else
+      nil -> json(conn, %{errors: "not found"})
+      true -> json(conn, %{errors: "不能修改根目录"})
+      {:error, changeset} ->
+        conn
+        |> put_view(WingmanWeb.ErrorView)
+        |> render("error_changeset.json", changeset: changeset)
+    end
+  end
+
+  def delete_folder(conn, %{"id" => id}) do
+    with %Folder{} = folder <- Media.get_folder(id),
+         false <- is_nil(folder.parent_id),
+         {:ok, _} <- Media.delete_folder(folder)
+    do
+      json(conn, %{ok: true})
+    else
+      nil -> json(conn, %{errors: "not found"})
+      true -> json(conn, %{errors: "不能删除根目录"})
       {:error, changeset} ->
         conn
         |> put_view(WingmanWeb.ErrorView)
@@ -92,6 +126,36 @@ defmodule WingmanWeb.MediaController do
         |> put_view(WingmanWeb.ErrorView)
         |> render("error_changeset.json", changeset: changeset)
       {:error, reason} ->
+        json(conn, %{errors: reason})
+    end
+  end
+
+  def update_file(conn, %{"id" => id, "file" => file_params}) do
+    with %MediaFile{} = file <- Media.get_file(id),
+         {:ok, new_file} <- Media.update_file(file, Map.take(file_params, ["name", "folder_id"]))
+    do
+      render(conn, "file.json", file: new_file)
+    else
+      nil -> json(conn, %{errors: "not found"})
+      {:error, changeset} ->
+        conn
+        |> put_view(WingmanWeb.ErrorView)
+        |> render("error_changeset.json", changeset: changeset)
+    end
+  end
+
+  def delete_file(conn, %{"id" => id}) do
+    with %MediaFile{} = file <- Media.get_file(id),
+         {:ok, _} <- Media.delete_file(file)
+    do
+      json(conn, %{ok: true})
+    else
+      nil -> json(conn, %{errors: "not found"})
+      {:error, :delete_file, changeset, _} ->
+        conn
+        |> put_view(WingmanWeb.ErrorView)
+        |> render("error_changeset.json", changeset: changeset)
+      {:error, _, reason, _} ->
         json(conn, %{errors: reason})
     end
   end
