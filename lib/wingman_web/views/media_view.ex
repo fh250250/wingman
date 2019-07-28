@@ -8,8 +8,13 @@ defmodule WingmanWeb.MediaView do
       files: render_many(files, __MODULE__, "file.json", as: :file)}
   end
 
+  def render("all_folders.json", %{folders: folders}) do
+    %{folders: render_many(folders, __MODULE__, "folder.json", as: :folder)}
+  end
+
   def render("folder.json", %{folder: folder}) do
     %{id: folder.id,
+      parent_id: folder.parent_id,
       name: folder.name}
   end
 

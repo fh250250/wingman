@@ -4,7 +4,7 @@ defmodule Wingman.Repo.Migrations.CreateMediaFolders do
   def change do
     create table(:media_folders) do
       add :name, :string, null: false
-      add :parent_id, references(:media_folders, on_delete: :delete_all)
+      add :parent_id, references(:media_folders)
 
       timestamps()
     end

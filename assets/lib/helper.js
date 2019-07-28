@@ -1,5 +1,10 @@
-import { includes as _includes } from 'lodash'
+import {
+  includes as _includes,
+  isString as _isString,
+  flatMap as _flatMap
+} from 'lodash'
 import SparkMD5 from 'spark-md5'
+import { Message } from 'element-ui'
 
 export function human_readable_bytes (bytes) {
   const SIZE_UNIT = ['B', 'KB', 'MB', 'GB']
@@ -57,4 +62,22 @@ function read_blob (blob) {
 
     file_reader.readAsArrayBuffer(blob)
   })
+}
+
+/**
+ * 格式化错误
+ * @param {Object|String} errors 服务端的 json 错误
+ */
+export function json_error_message (errors) {
+  let message = null
+
+  if (_isString(errors)) {
+    message = errors
+  } else {
+    message = _flatMap(errors, v => v)[0] || null
+  }
+
+  if (message) {
+    Message.error(message)
+  }
 }

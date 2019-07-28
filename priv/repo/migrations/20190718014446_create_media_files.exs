@@ -7,7 +7,7 @@ defmodule Wingman.Repo.Migrations.CreateMediaFiles do
       add :size, :bigint, null: false, default: 0
       add :content_type, :string, null: false
       add :path, :string, null: false
-      add :folder_id, references(:media_folders, on_delete: :delete_all), null: false
+      add :folder_id, references(:media_folders), null: false
 
       timestamps()
     end

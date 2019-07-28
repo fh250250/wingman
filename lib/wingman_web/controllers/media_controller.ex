@@ -37,6 +37,11 @@ defmodule WingmanWeb.MediaController do
     render(conn, "ls.json", folders: folder.folders, files: folder.files)
   end
 
+  def all_folders(conn, _params) do
+    folders = Media.get_all_folders()
+    render(conn, "all_folders.json", folders: folders)
+  end
+
   def mkdir(conn, %{"folder" => folder_params}, folder) do
     case Media.create_folder(folder, folder_params) do
       {:ok, new_folder} ->

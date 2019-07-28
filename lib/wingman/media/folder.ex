@@ -28,8 +28,8 @@ defmodule Wingman.Media.Folder do
   def delete_changeset(folder) do
     folder
     |> change()
-    |> no_assoc_constraint(:folders)
-    |> no_assoc_constraint(:files)
-    |> no_assoc_constraint(:uploads)
+    |> no_assoc_constraint(:folders, message: "无法删除, 子目录存在")
+    |> no_assoc_constraint(:files, message: "无法删除, 文件存在")
+    |> no_assoc_constraint(:uploads, message: "无法删除, 上传任务存在")
   end
 end

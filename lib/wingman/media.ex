@@ -24,6 +24,13 @@ defmodule Wingman.Media do
   def get_folder(id), do: Repo.get(Folder, id)
 
   @doc """
+  获取所有的目录
+  """
+  def get_all_folders() do
+    Repo.all(Folder)
+  end
+
+  @doc """
   创建目录
   """
   def create_folder(%Folder{} = folder, attrs) do
@@ -281,7 +288,7 @@ defmodule Wingman.Media do
     # 删除所有分块文件
     Enum.each(upload.chunks, &File.rm(Path.join([@media_config[:chunk_path], &1.path])))
 
-    # 删除上传任务及所有分块，有外键约束，这里只删除上传任务即可
+    # 删除上传任务及所有分块，有外键约束的级联删除，这里只删除上传任务即可
     Repo.delete!(upload)
   end
 end
