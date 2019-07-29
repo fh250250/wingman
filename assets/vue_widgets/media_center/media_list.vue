@@ -265,7 +265,7 @@ export default {
         border: 1px solid #eee;
         line-height: 1;
         transition: all .3s;
-        &:hover { background: #fcfcfc; }
+        &:hover { background: #fafafa; }
         &.folder .item-header { cursor: pointer; }
         .item-header {
           height: 96px;

@@ -34,3 +34,6 @@ vue_widgets.keys().forEach(key => {
     })
   })
 })
+
+// media_finder
+window.media_finder = new Vue(require('@/vue_widgets/media_finder').default)
