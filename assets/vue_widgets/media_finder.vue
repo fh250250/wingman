@@ -53,7 +53,13 @@
 
 <script>
 import axios from 'axios'
-import { last as _last, get as _get, find as _find, isFunction as _isFunction } from 'lodash'
+import {
+  last as _last,
+  get as _get,
+  find as _find,
+  isFunction as _isFunction,
+  pick as _pick
+} from 'lodash'
 
 export default {
   el: '#media_finder',
@@ -132,6 +138,8 @@ export default {
     },
 
     open (opts) {
+      if (this.visible) { return }
+
       this.visible = true
       this.is_multi_select = !!_get(opts, 'multi', false)
       this._open_callback = _get(opts, 'on_change', null)
@@ -143,8 +151,13 @@ export default {
 
       this.visible = false
 
+      const file_keys = ['id', 'name', 'content_type', 'size', 'path']
+      const result = this.is_multi_select
+                      ? this.selected_files.map(f => _pick(f, file_keys))
+                      : _pick(this.selected_files[0], file_keys)
+
       if (_isFunction(this._open_callback)) {
-        this._open_callback(JSON.parse(JSON.stringify(this.is_multi_select ? this.selected_files : this.selected_files[0])))
+        this._open_callback(JSON.parse(JSON.stringify(result)))
       }
     }
   }
