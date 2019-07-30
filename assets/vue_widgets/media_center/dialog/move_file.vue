@@ -91,7 +91,7 @@ export default {
 <style lang="scss" scoped>
 .move-file-dialog {
   /deep/ .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
-    background-color: #3c8dbc;
+    background-color: $--color-primary;
     color: white;
   }
 }

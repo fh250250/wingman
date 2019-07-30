@@ -221,8 +221,8 @@ export default {
         cursor: pointer;
         &:hover { background: #fafafa; }
         &.selected {
-          border-color: #3c8dbc;
-          outline-color: #3c8dbc;
+          border-color: $--color-primary;
+          outline-color: $--color-primary;
         }
         .item-header {
           height: 96px;
@@ -239,7 +239,7 @@ export default {
             top: 50%;
             transform: translate(-50%, -50%);
             font-size: 48px;
-            &.el-icon-folder { color: #f39c12; }
+            &.el-icon-folder { color: $--color-warning; }
           }
         }
         .item-name {

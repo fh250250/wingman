@@ -282,7 +282,7 @@ export default {
             top: 50%;
             transform: translate(-50%, -50%);
             font-size: 48px;
-            &.el-icon-folder { color: #f39c12; }
+            &.el-icon-folder { color: $--color-warning; }
           }
         }
         .item-body {

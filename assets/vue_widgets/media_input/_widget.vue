@@ -96,8 +96,8 @@ export default {
     cursor: pointer;
     transition: all .3s;
     &:hover {
-      border-color: #3c8dbc;
-      color: #3c8dbc;
+      border-color: $--color-primary;
+      color: $--color-primary;
     }
   }
   .file-box {
