@@ -24,7 +24,7 @@ defmodule WingmanWeb.Movie.TagGroupView do
       [
         label(form, field, "标签管理"),
         vue_widget(:tags_input, %{
-          name: "#{form.name}[#{field}]",
+          name: input_name(form, field),
           list: list
         })
       ]

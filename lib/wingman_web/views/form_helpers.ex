@@ -5,7 +5,7 @@ defmodule WingmanWeb.FormHelpers do
 
   use Phoenix.HTML
 
-  alias WingmanWeb.ErrorHelpers
+  alias WingmanWeb.{ErrorHelpers, WidgetHelpers}
 
   defp state_class(form, field) do
     cond do
@@ -23,6 +23,21 @@ defmodule WingmanWeb.FormHelpers do
       [
         label(form, field, label_text),
         apply(Phoenix.HTML.Form, input, [form, field, input_opts]),
+        ErrorHelpers.error_tag(form, field)
+      ]
+    end
+  end
+
+  def media_input(form, field, label_text) do
+    wrapper_opts = [class: "form-group #{state_class(form, field)}"]
+
+    content_tag :div, wrapper_opts do
+      [
+        label(form, field, label_text),
+        WidgetHelpers.vue_widget(:media_input, %{
+          form_name: input_name(form, field),
+          form_value: input_value(form, field)
+        }),
         ErrorHelpers.error_tag(form, field)
       ]
     end
