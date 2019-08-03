@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/vendor/bootstrap/css/bootstrap.min.css") %>">
   <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/vendor/font-awesome/css/font-awesome.min.css") %>">
   <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/vendor/ionicons/css/ionicons.min.css") %>">
+  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/vendor/icheck/square/_all.css") %>">
   <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/vendor/adminlte/adminlte.min.css") %>">
   <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/vendor/adminlte/skin-blue.min.css") %>">
   <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>">
@@ -46,6 +47,7 @@
 <script src="<%= Routes.static_path(@conn, "/vendor/jquery/jquery.min.js") %>"></script>
 <script src="<%= Routes.static_path(@conn, "/vendor/jquery/jquery.slimscroll.min.js") %>"></script>
 <script src="<%= Routes.static_path(@conn, "/vendor/bootstrap/js/bootstrap.min.js") %>"></script>
+<script src="<%= Routes.static_path(@conn, "/vendor/icheck/icheck.min.js") %>"></script>
 <script src="<%= Routes.static_path(@conn, "/vendor/adminlte/adminlte.min.js") %>"></script>
 <script src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
 </body>

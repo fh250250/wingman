@@ -10,8 +10,11 @@ defmodule WingmanWeb.Movie.FilmController do
   end
 
   def new(conn, _params) do
-    changeset = Movie.change_film(%Film{})
-    render(conn, "new.html", changeset: changeset)
+    conn
+    |> assign(:changeset, Movie.change_film(%Film{}))
+    |> assign(:tag_groups,  Movie.all_tag_groups())
+    |> assign(:tag_ids, [])
+    |> render("new.html")
   end
 
   def create(conn, %{"film" => film_params}) do
@@ -24,18 +27,27 @@ defmodule WingmanWeb.Movie.FilmController do
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
         |> put_flash(:error, "创建失败")
-        |> render("new.html", changeset: changeset)
+        |> assign(:changeset, changeset)
+        |> assign(:tag_groups,  Movie.all_tag_groups())
+        |> assign(:tag_ids, film_params |> Map.get("tag_ids", []) |> Enum.map(&String.to_integer/1))
+        |> render("new.html")
     end
   end
 
   def edit(conn, %{"id" => id}) do
-    film = Movie.get_film!(id)
+    film = Movie.get_film!(id, :with_tags)
     changeset = Movie.change_film(film)
-    render(conn, "edit.html", film: film, changeset: changeset)
+
+    conn
+    |> assign(:film, film)
+    |> assign(:changeset, changeset)
+    |> assign(:tag_groups,  Movie.all_tag_groups())
+    |> assign(:tag_ids, Enum.map(film.tags, &(&1.id)))
+    |> render("edit.html")
   end
 
   def update(conn, %{"id" => id, "film" => film_params}) do
-    film = Movie.get_film!(id)
+    film = Movie.get_film!(id, :with_tags)
 
     case Movie.update_film(film, film_params) do
       {:ok, _film} ->
@@ -46,7 +58,11 @@ defmodule WingmanWeb.Movie.FilmController do
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
         |> put_flash(:error, "更新失败")
-        render(conn, "edit.html", film: film, changeset: changeset)
+        |> assign(:film, film)
+        |> assign(:changeset, changeset)
+        |> assign(:tag_groups,  Movie.all_tag_groups())
+        |> assign(:tag_ids, Enum.map(film.tags, &(&1.id)))
+        |> render("edit.html")
     end
   end
 

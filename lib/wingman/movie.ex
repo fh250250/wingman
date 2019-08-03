@@ -14,16 +14,19 @@ defmodule Wingman.Movie do
   end
 
   def get_film!(id), do: Repo.get!(Film, id)
+  def get_film!(id, :with_tags), do: get_film!(id) |> Repo.preload(:tags)
 
   def create_film(attrs \\ %{}) do
     %Film{}
     |> Film.changeset(attrs)
+    |> Film.change_tags(attrs)
     |> Repo.insert()
   end
 
   def update_film(%Film{} = film, attrs) do
     film
     |> Film.changeset(attrs)
+    |> Film.change_tags(attrs)
     |> Repo.update()
   end
 
@@ -63,5 +66,15 @@ defmodule Wingman.Movie do
 
   def change_tag_group(%TagGroup{} = tag_group) do
     TagGroup.changeset(tag_group, %{})
+  end
+
+
+
+
+  @doc """
+  获取所有 tag_groups 及 tags
+  """
+  def all_tag_groups() do
+    TagGroup |> Repo.all() |> Repo.preload(:tags)
   end
 end

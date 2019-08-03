@@ -4,6 +4,7 @@
       <div class="col-md-6">
         <%= simple_input f, :title, "标题", :text_input %>
         <%= simple_input f, :desc, "描述", :textarea, rows: 5 %>
+        <%= tags_assoc_input f, :tag_ids, @tag_groups, @tag_ids %>
       </div>
       <div class="col-md-6">
         <%= media_input f, :poster, "封面图片" %>

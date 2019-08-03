@@ -37,3 +37,14 @@ vue_widgets.keys().forEach(key => {
 
 // media_finder
 window.media_finder = new Vue(require('@/vue_widgets/media_finder').default)
+
+// 初始化所有 iCheck
+$('[data-icheck]').each(function () {
+  const $el = $(this)
+  const color = $el.data('icheck') || 'blue'
+
+  $el.iCheck({
+    checkboxClass: `icheckbox_square-${color}`,
+    radioClass: `iradio_square-${color}`
+  })
+})
