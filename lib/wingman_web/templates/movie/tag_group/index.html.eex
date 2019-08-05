@@ -1,29 +1,32 @@
 <div class="box box-primary">
   <div class="box-header with-border">
-    <div class="box-title">列表</div>
+    <%= link "创建", to: Routes.movie_tag_group_path(@conn, :new), class: "btn btn-flat btn-primary" %>
   </div>
   <div class="box-body">
     <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th></th>
-        </tr>
-      </thead>
       <tbody>
-    <%= for tag_group <- @tag_groups do %>
+      <tr>
+        <th>名称</th>
+        <th>标签</th>
+        <th width="150">操作</th>
+      </tr>
+      <%= for tag_group <- @tag_groups do %>
         <tr>
           <td><%= tag_group.title %></td>
 
           <td>
-            <%= link "Edit", to: Routes.movie_tag_group_path(@conn, :edit, tag_group) %>
-            <%= link "Delete", to: Routes.movie_tag_group_path(@conn, :delete, tag_group), method: :delete, data: [confirm: "Are you sure?"] %>
+          <%= for tag <- tag_group.tags do %>
+            <span class="label label-default"><%= tag.title %></span>
+          <% end %>
+          </td>
+
+          <td>
+            <%= link "编辑", to: Routes.movie_tag_group_path(@conn, :edit, tag_group), class: "btn btn-flat btn-sm btn-warning", style: "margin-right: 10px" %>
+            <%= link "删除", to: Routes.movie_tag_group_path(@conn, :delete, tag_group), class: "btn btn-flat btn-sm btn-danger", method: :delete, data: [confirm: "确认删除?"] %>
           </td>
         </tr>
-    <% end %>
+      <% end %>
       </tbody>
     </table>
   </div>
 </div>
-
-<span><%= link "New Tag group", to: Routes.movie_tag_group_path(@conn, :new) %></span>

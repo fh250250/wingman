@@ -12,7 +12,7 @@ defmodule WingmanWeb.Movie.FilmController do
   def new(conn, _params) do
     conn
     |> assign(:changeset, Movie.change_film(%Film{}))
-    |> assign(:tag_groups,  Movie.all_tag_groups())
+    |> assign(:tag_groups,  Movie.list_tag_groups())
     |> assign(:tag_ids, [])
     |> render("new.html")
   end
@@ -28,7 +28,7 @@ defmodule WingmanWeb.Movie.FilmController do
         conn
         |> put_flash(:error, "创建失败")
         |> assign(:changeset, changeset)
-        |> assign(:tag_groups,  Movie.all_tag_groups())
+        |> assign(:tag_groups,  Movie.list_tag_groups())
         |> assign(:tag_ids, film_params |> Map.get("tag_ids", []) |> Enum.map(&String.to_integer/1))
         |> render("new.html")
     end
@@ -41,7 +41,7 @@ defmodule WingmanWeb.Movie.FilmController do
     conn
     |> assign(:film, film)
     |> assign(:changeset, changeset)
-    |> assign(:tag_groups,  Movie.all_tag_groups())
+    |> assign(:tag_groups,  Movie.list_tag_groups())
     |> assign(:tag_ids, Enum.map(film.tags, &(&1.id)))
     |> render("edit.html")
   end
@@ -60,7 +60,7 @@ defmodule WingmanWeb.Movie.FilmController do
         |> put_flash(:error, "更新失败")
         |> assign(:film, film)
         |> assign(:changeset, changeset)
-        |> assign(:tag_groups,  Movie.all_tag_groups())
+        |> assign(:tag_groups,  Movie.list_tag_groups())
         |> assign(:tag_ids, Enum.map(film.tags, &(&1.id)))
         |> render("edit.html")
     end
