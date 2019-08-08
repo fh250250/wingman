@@ -2,6 +2,7 @@ defmodule WingmanWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :wingman
 
   @media_config Application.get_env(:wingman, Wingman.Media)
+  @storage_config Application.get_env(:wingman, Wingman.Storage)
 
   socket "/socket", WingmanWeb.UserSocket,
     websocket: true,
@@ -21,6 +22,10 @@ defmodule WingmanWeb.Endpoint do
   plug Plug.Static,
     at: @media_config[:public_path],
     from: @media_config[:upload_path]
+
+  plug Plug.Static,
+    at: @storage_config[:public_path],
+    from: @storage_config[:root_path]
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

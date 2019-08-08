@@ -12,6 +12,12 @@ config :wingman, Wingman.Media,
   upload_path: Path.expand("../priv/uploads", __DIR__),
   chunk_path: Path.expand("../priv/upload_chunks", __DIR__)
 
+# 存储配置
+config :wingman, Wingman.Storage,
+  public_path: "/storage",
+  root_path: Path.expand("../priv/storage/root", __DIR__),
+  tmp_path: Path.expand("../priv/storage/tmp", __DIR__)
+
 config :wingman,
   ecto_repos: [Wingman.Repo]
 
