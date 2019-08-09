@@ -39,6 +39,20 @@ defmodule WingmanWeb.Router do
       post "/file", MediaController, :update_file
       delete "/file", MediaController, :delete_file
     end
+
+    scope "/storage" do
+      get "/", StorageController, :index
+
+      post "/ls", StorageController, :ls
+      post "/mkdir", StorageController, :mkdir
+      post "/upload", StorageController, :upload
+      post "/rename", StorageController, :rename
+      post "/rmdir", StorageController, :rmdir
+      post "/rm", StorageController, :rm
+      post "/task", StorageController, :task
+      post "/chunk", StorageController, :chunk
+      post "/combine", StorageController, :combine
+    end
   end
 
   # Other scopes may use custom stacks.

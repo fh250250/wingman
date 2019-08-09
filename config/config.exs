@@ -14,7 +14,7 @@ config :wingman, Wingman.Media,
 
 # 存储配置
 config :wingman, Wingman.Storage,
-  public_path: "/storage",
+  public_path: "/storage-dist",
   root_path: Path.expand("../priv/storage/root", __DIR__),
   tmp_path: Path.expand("../priv/storage/tmp", __DIR__)
 
