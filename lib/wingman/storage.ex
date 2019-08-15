@@ -8,51 +8,57 @@ defmodule Wingman.Storage do
   import Ecto.Query, warn: false
 
   alias Wingman.Repo
-  alias Wingman.Storage.{Upload, Chunk}
+  alias Wingman.Storage.{Folder, Upload, Chunk}
+  alias Wingman.Storage.File, as: StorageFile
 
   @doc """
-  创建初始的存储目录
+  通过 id 获取目录，没有参数则返回根目录
   """
-  def setup do
-    File.mkdir_p!(@storage_config[:root_path])
-    File.mkdir_p!(@storage_config[:tmp_path])
+  @spec get_folder() :: nil | Folder.t
+  @spec get_folder(id :: String.t | integer) :: nil | Folder.t
+  def get_folder() do
+    query =
+      from f in Folder,
+      where: is_nil(f.parent_id)
+
+    Repo.one(query)
   end
+  def get_folder(id), do: Repo.get(Folder, id)
 
   @doc """
   列出文件与目录
   """
-  @spec ls(String.t) :: {:ok, list} | {:error, term}
-  def ls(path) do
-    with {:ok, dir} <- safe_path(path),
-         {:ok, files} <- File.ls(dir)
-    do
-      items =
-        files
-        |> Enum.map(fn filename ->
-          abs_path = Path.expand(filename, dir)
-          relative_path = Path.relative_to(abs_path, @storage_config[:root_path])
-
-          {relative_path, File.stat(abs_path)}
-        end)
-        |> Enum.filter(&match?({_relative_path, {:ok, _stat}}, &1))
-        |> Enum.map(fn {relative_path, {:ok, stat}} ->
-          %{path: relative_path,
-            url: Path.join(@storage_config[:public_path], relative_path),
-            type: stat.type,
-            size: stat.size}
-        end)
-
-      {:ok, items}
+  @spec ls(folder :: Folder.t) :: %{folders: list(Folder.t), files: list(StorageFile.t)}
+  def ls(%Folder{} = folder) do
+    case Repo.preload(folder, [:folders, :files]) do
+      %Folder{folders: folders, files: files} ->
+        %{folders: folders, files: files}
+      nil ->
+        %{folders: [], files: []}
     end
   end
 
   @doc """
   创建目录
   """
-  @spec mkdir(String.t) :: :ok | {:error, term}
-  def mkdir(path) do
-    with {:ok, dir} <- safe_path(path) do
-      File.mkdir(dir)
+  @spec mkdir(folder :: Folder.t, name :: String.t) :: {:ok, Folder.t} | {:error, Ecto.Changeset.t | term}
+  def mkdir(%Folder{} = folder, name) do
+    update_lft_query = from f in Folder, where: f.lft > ^folder.rht
+    update_rht_query = from f in Folder, where: f.rht >= ^folder.rht
+    create_changeset =
+      folder
+      |> Ecto.build_assoc(:folders)
+      |> Folder.changeset(%{name: name, lft: folder.rht, rht: folder.rht + 1})
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update_all(:update_lft, update_lft_query, inc: [lft: 2])
+    |> Ecto.Multi.update_all(:update_rht, update_rht_query, inc: [rht: 2])
+    |> Ecto.Multi.insert(:create, create_changeset)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{create: new_folder}} -> {:ok, new_folder}
+      {:error, :create, changeset, _} -> {:error, changeset}
+      {:error, _, _, _} -> {:error, "创建目录失败"}
     end
   end
 

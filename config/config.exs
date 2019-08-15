@@ -7,11 +7,6 @@
 # General application configuration
 use Mix.Config
 
-config :wingman, Wingman.Media,
-  public_path: "/uploads",
-  upload_path: Path.expand("../priv/uploads", __DIR__),
-  chunk_path: Path.expand("../priv/upload_chunks", __DIR__)
-
 # 存储配置
 config :wingman, Wingman.Storage,
   public_path: "/storage-dist",

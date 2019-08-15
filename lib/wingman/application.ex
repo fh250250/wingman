@@ -14,7 +14,6 @@ defmodule Wingman.Application do
       WingmanWeb.Endpoint,
       # Starts a worker by calling: Wingman.Worker.start_link(arg)
       # {Wingman.Worker, arg},
-      Wingman.Media.Cleaner,
       Wingman.Storage.Cleaner
     ]
 

@@ -1,7 +1,6 @@
 defmodule WingmanWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :wingman
 
-  @media_config Application.get_env(:wingman, Wingman.Media)
   @storage_config Application.get_env(:wingman, Wingman.Storage)
 
   socket "/socket", WingmanWeb.UserSocket,
@@ -19,10 +18,6 @@ defmodule WingmanWeb.Endpoint do
     only: ~w(css fonts images js vendor favicon.ico robots.txt)
 
   # 上传目录静态伺服
-  plug Plug.Static,
-    at: @media_config[:public_path],
-    from: @media_config[:upload_path]
-
   plug Plug.Static,
     at: @storage_config[:public_path],
     from: @storage_config[:root_path]
