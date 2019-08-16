@@ -43,16 +43,16 @@ defmodule Wingman.Storage do
   """
   @spec mkdir(folder :: Folder.t, name :: String.t) :: {:ok, Folder.t} | {:error, Ecto.Changeset.t | term}
   def mkdir(%Folder{} = folder, name) do
-    update_lft_query = from f in Folder, where: f.lft > ^folder.rht
-    update_rht_query = from f in Folder, where: f.rht >= ^folder.rht
+    update_lft_query = from f in Folder, where: f.lft > ^folder.rgt
+    update_rgt_query = from f in Folder, where: f.rgt >= ^folder.rgt
     create_changeset =
       folder
       |> Ecto.build_assoc(:folders)
-      |> Folder.changeset(%{name: name, lft: folder.rht, rht: folder.rht + 1})
+      |> Folder.changeset(%{name: name, lft: folder.rgt, rgt: folder.rgt + 1})
 
     Ecto.Multi.new()
     |> Ecto.Multi.update_all(:update_lft, update_lft_query, inc: [lft: 2])
-    |> Ecto.Multi.update_all(:update_rht, update_rht_query, inc: [rht: 2])
+    |> Ecto.Multi.update_all(:update_rgt, update_rgt_query, inc: [rgt: 2])
     |> Ecto.Multi.insert(:create, create_changeset)
     |> Repo.transaction()
     |> case do
@@ -61,6 +61,50 @@ defmodule Wingman.Storage do
       {:error, _, _, _} -> {:error, "创建目录失败"}
     end
   end
+
+  @doc """
+  移动目录
+  """
+  def mv(%Folder{} = folder, %Folder{} = dest_folder) do
+    with false <- is_root_folder?(folder),
+         false <- folder.id == dest_folder.id,
+         false <- is_child_folder?(dest_folder, folder),
+         false <- folder.parent_id == dest_folder.id
+    do
+      Repo.transaction(fn ->
+        # 1. 移除需要移动的目录，这里把左右值设成负数
+        from(f in Folder,
+          where: f.lft >= ^folder.lft and f.rgt <= ^folder.rgt,
+          update: [set: [lft: 0 - f.lft, rgt: 0 - f.rgt]])
+        |> Repo.update_all([])
+
+        # 2. 调整左右值来收缩空间
+
+        # 3. 调整左右值来腾出新的位置
+
+        # 4. 修改需要移动的目录的左右值，并设置 parent_id
+      end)
+      |> case do
+        {:ok, _} -> :ok
+        {:error, _} -> {:error, "移动目录失败"}
+      end
+    else
+      _ -> {:error, "目录非法"}
+    end
+  end
+
+  # 判断是否为根目录
+  defp is_root_folder?(%Folder{parent_id: nil}), do: true
+  defp is_root_folder?(%Folder{}), do: false
+
+  defp is_child_folder?(%Folder{} = child_folder, %Folder{} = parent_folder) do
+    child_folder.lft > parent_folder.lft && child_folder.rgt < parent_folder.rgt
+  end
+
+
+
+
+
 
   @doc """
   保存上传的文件

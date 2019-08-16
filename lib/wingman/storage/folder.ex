@@ -8,7 +8,7 @@ defmodule Wingman.Storage.Folder do
   schema "storage_folders" do
     field :name, :string
     field :lft, :integer
-    field :rht, :integer
+    field :rgt, :integer
 
     belongs_to :parent, __MODULE__
     has_many :folders, __MODULE__, foreign_key: :parent_id, references: :id
@@ -21,8 +21,8 @@ defmodule Wingman.Storage.Folder do
   @doc false
   def changeset(folder, attrs) do
     folder
-    |> cast(attrs, [:name, :lft, :rht, :parent_id])
-    |> validate_required([:name, :lft, :rht, :parent_id])
+    |> cast(attrs, [:name, :lft, :rgt, :parent_id])
+    |> validate_required([:name, :lft, :rgt, :parent_id])
     |> foreign_key_constraint(:parent_id)
     |> unique_constraint(:name, name: :storage_folders_name_parent_id_index)
   end

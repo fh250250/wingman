@@ -6,13 +6,15 @@ defmodule Wingman.Repo.Migrations.CreateStorage do
     create table(:storage_folders) do
       add :name, :string, null: false
       add :lft, :integer, null: false
-      add :rht, :integer, null: false
+      add :rgt, :integer, null: false
       add :parent_id, references(:storage_folders)
 
       timestamps()
     end
 
     create index(:storage_folders, [:parent_id])
+    create index(:storage_folders, [:lft])
+    create index(:storage_folders, [:rgt])
     create unique_index(:storage_folders, [:name, :parent_id])
 
 
