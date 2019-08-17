@@ -23,23 +23,6 @@ defmodule WingmanWeb.Router do
       resources "/tag-groups", TagGroupController, except: [:show]
     end
 
-    scope "/media" do
-      get "/", MediaController, :index
-      get "/ls", MediaController, :ls
-      get "/folders", MediaController, :all_folders
-
-      post "/mkdir", MediaController, :mkdir
-      post "/folder", MediaController, :update_folder
-      delete "/folder", MediaController, :delete_folder
-
-      post "/upload", MediaController, :upload
-      post "/upload/task", MediaController, :upload_task
-      post "/upload/chunk", MediaController, :upload_chunk
-      post "/upload/combine", MediaController, :upload_combine
-      post "/file", MediaController, :update_file
-      delete "/file", MediaController, :delete_file
-    end
-
     scope "/storage" do
       get "/", StorageController, :index
 

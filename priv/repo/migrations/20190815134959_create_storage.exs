@@ -38,7 +38,6 @@ defmodule Wingman.Repo.Migrations.CreateStorage do
       add :md5, :string, null: false
       add :filename, :string, null: false
       add :size, :bigint, null: false
-      add :chunk_size, :integer, null: false
       add :folder_id, references(:storage_folders), null: false
 
       timestamps()

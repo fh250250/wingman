@@ -34,8 +34,6 @@ npm-debug.log
 /priv/static/
 
 # 默认上传目录
-/priv/uploads/
-/priv/upload_chunks/
 /priv/storage/
 
 # VSCode 插件 ElixirLS
