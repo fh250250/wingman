@@ -28,11 +28,14 @@ defmodule WingmanWeb.Router do
 
       post "/ls", StorageController, :ls
       post "/mkdir", StorageController, :mkdir
-      post "/upload", StorageController, :upload
-      post "/rename", StorageController, :rename
       post "/rmdir", StorageController, :rmdir
+      post "/rename/folder", StorageController, :rename_folder
+      post "/rename/file", StorageController, :rename_file
+      post "/move/folder", StorageController, :move_folder
+      post "/move/file", StorageController, :move_file
       post "/rm", StorageController, :rm
-      post "/task", StorageController, :task
+      post "/small-upload", StorageController, :small_upload
+      post "/large-upload", StorageController, :large_upload
       post "/chunk", StorageController, :chunk
       post "/combine", StorageController, :combine
     end

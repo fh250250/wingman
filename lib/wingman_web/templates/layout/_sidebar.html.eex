@@ -14,7 +14,7 @@
         </ul>
       </li>
 
-      <li><a href="<%= Routes.media_path(@conn, :index) %>"><i class="fa fa-link"></i> <span>媒体中心</span></a></li>
+      <li><a href="<%= Routes.storage_path(@conn, :index) %>"><i class="fa fa-link"></i> <span>存储库</span></a></li>
     </ul>
   </section>
 </aside>

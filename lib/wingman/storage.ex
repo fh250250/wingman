@@ -29,13 +29,13 @@ defmodule Wingman.Storage do
   @doc """
   列出文件与目录
   """
-  @spec ls(folder :: Folder.t) :: %{folders: list(Folder.t), files: list(StorageFile.t)}
+  @spec ls(folder :: Folder.t) :: {list(Folder.t), list(StorageFile.t)}
   def ls(%Folder{} = folder) do
     case Repo.preload(folder, [:folders, :files]) do
       %Folder{folders: folders, files: files} ->
-        %{folders: folders, files: files}
+        {folders, files}
       nil ->
-        %{folders: [], files: []}
+        {[], []}
     end
   end
 
@@ -344,6 +344,14 @@ defmodule Wingman.Storage do
 
     # 删除上传任务及所有分块，有外键约束的级联删除，这里只删除上传任务即可
     Repo.delete!(upload)
+  end
+
+  @doc """
+  获取文件 url
+  """
+  @spec public_url(file :: StorageFile.t) :: String.t
+  def public_url(%StorageFile{path: path}) do
+    Path.join(@storage_config[:public_path], path)
   end
 
 
