@@ -40,6 +40,17 @@ defmodule Wingman.Storage do
   end
 
   @doc """
+  仅列出该目录下的所有目录
+  """
+  @spec ls_folders(folder :: Folder.t) :: list(Folder.t)
+  def ls_folders(%Folder{} = folder) do
+    case Repo.preload(folder, :folders) do
+      %Folder{folders: folders} -> folders
+      nil -> []
+    end
+  end
+
+  @doc """
   创建目录
   """
   @spec mkdir(folder :: Folder.t, name :: String.t) :: :ok | {:error, Ecto.Changeset.t | String.t}

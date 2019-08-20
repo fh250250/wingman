@@ -1,7 +1,7 @@
 <template>
 <el-dialog
     :visible.sync="visible"
-    title="创建目录"
+    title="重命名目录"
     width="500px"
     append-to-body
     :close-on-click-modal="!loading"
@@ -29,13 +29,15 @@ export default {
     return {
       visible: false,
       loading: false,
+      id: null,
       name: ''
     }
   },
 
   methods: {
-    open () {
-      this.name = ''
+    open (folder) {
+      this.id = folder.id
+      this.name = folder.name
       this.visible = true
     },
 
@@ -47,16 +49,16 @@ export default {
       if (!this.name) { return }
 
       this.loading = true
-      const { data } = await axios.post('/media/mkdir', {
-        folder_id: this.$parent.current_folder_id,
-        folder: { name: this.name }
+      const { data } = await axios.post('/storage/rename-folder', {
+        folder_id: this.id,
+        name: this.name
       })
       this.loading = false
 
       if (data.errors) {
         this.$helper.json_error_message(data.errors)
       } else {
-        this.$message.success('创建目录成功')
+        this.$message.success('重命名目录成功')
         this.visible = false
         this.$parent.load()
       }

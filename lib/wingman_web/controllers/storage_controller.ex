@@ -18,6 +18,14 @@ defmodule WingmanWeb.StorageController do
     end
   end
 
+  def ls_folders(conn, %{"folder_id" => folder_id}) do
+    with {:ok, folder} <- find_folder_by_id(folder_id),
+         folders <- Storage.ls_folders(folder)
+    do
+      render(conn, "ls_folders.json", folders: folders)
+    end
+  end
+
   def mkdir(conn, %{"folder_id" => folder_id, "name" => name}) do
     with {:ok, folder} <- find_folder_by_id(folder_id),
          :ok <- Storage.mkdir(folder, name)
@@ -76,8 +84,8 @@ defmodule WingmanWeb.StorageController do
     end
   end
 
-  def small_upload(conn, %{"folder_id" => folder_id, "file" => %Plug.Upload{} = upload_file}) do
-    with {:ok, folder} <- find_folder_by_id(folder_id),
+  def small_upload(conn, %{"file" => %Plug.Upload{} = upload_file} = params) do
+    with {:ok, folder} <- find_folder_by_id(params["folder_id"]),
          :ok <- Storage.save_file(folder, upload_file)
     do
       json(conn, %{ok: true})

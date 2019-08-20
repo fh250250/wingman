@@ -1,10 +1,10 @@
 <template>
-<div class="mc-list" v-loading="loading">
-  <div class="mc-header">
+<div class="explorer" v-loading="loading">
+  <div class="explorer-header">
     <div class="header-left">
       <el-button icon="el-icon-back" :disabled="path_stack.length < 1" @click="back"/>
 
-      <el-button type="primary" icon="el-icon-folder-add" @click="$refs.create_folder_dialog.open()"/>
+      <el-button type="primary" icon="el-icon-folder-add" @click="$refs.mkdir_dialog.open()"/>
 
       <el-button type="primary" icon="el-icon-upload2" @click="$refs.upload.click()"/>
       <input type="file" multiple style="display: none" ref="upload" @change="handle_upload">
@@ -23,7 +23,7 @@
       @click="change_path(idx)">{{ f.name }}</li>
   </ol>
 
-  <div class="mc-body">
+  <div class="explorer-body">
     <div v-if="folders.length || files.length" class="content-view">
       <div v-for="f of folders" :key="`folder-${f.id}`" class="content-item folder">
         <div class="item-header" @click="cd(f)">
@@ -44,7 +44,7 @@
 
       <div v-for="f of files" :key="`file-${f.id}`" class="content-item">
         <div class="item-header">
-          <el-image v-if="$helper.is_image(f.content_type)" :src="f.path" fit="cover" class="preview-image"/>
+          <el-image v-if="$helper.is_image(f.content_type)" :src="f.url" fit="cover" class="preview-image"/>
           <div v-else class="preview-icon el-icon-document"/>
         </div>
         <div class="item-body">
@@ -64,7 +64,7 @@
   </div>
 
   <!-- 弹框 -->
-  <create-folder-dialog ref="create_folder_dialog"/>
+  <mkdir-dialog ref="mkdir_dialog"/>
   <rename-folder-dialog ref="rename_folder_dialog"/>
   <move-folder-dialog ref="move_folder_dialog"/>
   <rename-file-dialog ref="rename_file_dialog"/>
@@ -75,15 +75,14 @@
 <script>
 import axios from 'axios'
 import { last as _last, get as _get } from 'lodash'
-import CreateFolderDialog from './dialog/create_folder'
+import MkdirDialog from './dialog/mkdir'
 import RenameFolderDialog from './dialog/rename_folder'
 import MoveFolderDialog from './dialog/move_folder'
 import RenameFileDialog from './dialog/rename_file'
 import MoveFileDialog from './dialog/move_file'
 
 export default {
-  inject: ['media_center'],
-  components: { CreateFolderDialog, RenameFolderDialog, MoveFolderDialog, RenameFileDialog, MoveFileDialog },
+  components: { MkdirDialog, RenameFolderDialog, MoveFolderDialog, RenameFileDialog, MoveFileDialog },
 
   data () {
     return {
@@ -109,9 +108,7 @@ export default {
       if (this.loading) { return }
 
       this.loading = true
-      const { data } = await axios.get('/media/ls', {
-        params: { folder_id: this.current_folder_id}
-      })
+      const { data } = await axios.post('/storage/ls', { folder_id: this.current_folder_id })
       this.loading = false
 
       this.folders = data.folders.sort((a, b) => a.name.localeCompare(b.name))
@@ -140,11 +137,11 @@ export default {
 
     async handle_upload (ev) {
       ev.target.files
-        .forEach(file => this.media_center.$refs.task_list.add_task(this.current_folder_id, file))
+        .forEach(file => this.$root.$refs.task_list.add_task(this.current_folder_id, file))
 
       ev.target.value = null
 
-      this.$message.success('已添加至上传队列')
+      this.$message.success('已添加至任务队列')
     },
 
     handle_folder_op ({ op, folder }) {
@@ -169,9 +166,7 @@ export default {
       }
 
       this.loading = true
-      const { data } = await axios.delete('/media/folder', {
-        data: { id: folder.id }
-      })
+      const { data } = await axios.post('/storage/rmdir', { folder_id: folder.id })
       this.loading = false
 
       if (data.errors) {
@@ -204,9 +199,7 @@ export default {
       }
 
       this.loading = true
-      const { data } = await axios.delete('/media/file', {
-        data: { id: file.id }
-      })
+      const { data } = await axios.post('/storage/rm', { file_id: file.id })
       this.loading = false
 
       if (data.errors) {
@@ -221,8 +214,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mc-list {
-  .mc-header {
+.explorer {
+  &-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -241,8 +234,8 @@ export default {
     border-radius: 0;
     li:not(.active) { cursor: pointer; }
   }
-  .mc-body {
-    height: 500px;
+  &-body {
+    height: 450px;
     overflow: auto;
     position: relative;
     .no-content {

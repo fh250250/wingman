@@ -1,5 +1,5 @@
 <template>
-<el-drawer class="media-finder"
+<el-drawer class="storage-finder"
     :visible.sync="visible"
     direction="btt"
     size="80%"
@@ -39,7 +39,7 @@
             :class="{ selected: f.selected }"
             @click="toggle_select(f)">
           <div class="item-header">
-            <el-image v-if="$helper.is_image(f.content_type)" :src="f.path" fit="cover" class="preview-image"/>
+            <el-image v-if="$helper.is_image(f.content_type)" :src="f.url" fit="cover" class="preview-image"/>
             <div v-else class="preview-icon el-icon-document"/>
           </div>
           <div class="item-name" :title="f.name">{{ f.name }}</div>
@@ -62,7 +62,7 @@ import {
 } from 'lodash'
 
 export default {
-  el: '#media_finder',
+  el: '#storage_finder',
 
   data () {
     return {
@@ -94,9 +94,7 @@ export default {
       if (this.loading) { return }
 
       this.loading = true
-      const { data } = await axios.get('/media/ls', {
-        params: { folder_id: this.current_folder_id}
-      })
+      const { data } = await axios.post('/storage/ls', { folder_id: this.current_folder_id })
       this.loading = false
 
       this.folders = data.folders.sort((a, b) => a.name.localeCompare(b.name))
@@ -151,7 +149,7 @@ export default {
 
       this.visible = false
 
-      const file_keys = ['id', 'name', 'content_type', 'size', 'path']
+      const file_keys = ['id', 'name', 'content_type', 'size', 'url']
       const result = this.is_multi_select
                       ? this.selected_files.map(f => _pick(f, file_keys))
                       : _pick(this.selected_files[0], file_keys)
@@ -165,7 +163,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.media-finder {
+.storage-finder {
   /deep/ {
     .el-drawer__header {
       padding: 15px 15px 0;

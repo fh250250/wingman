@@ -35,8 +35,8 @@ vue_widgets.keys().forEach(key => {
   })
 })
 
-// media_finder
-window.media_finder = new Vue(require('@/vue_widgets/media_finder').default)
+// storage_finder
+window.storage_finder = new Vue(require('@/vue_widgets/storage_finder').default)
 
 // 初始化所有 iCheck
 $('[data-icheck]').each(function () {

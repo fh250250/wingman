@@ -51,8 +51,6 @@ const STATUS = {
 const MAX_TASK = 3
 
 export default {
-  inject: ['media_center'],
-
   data () {
     return {
       list: []
@@ -60,7 +58,7 @@ export default {
   },
 
   created () {
-    this.throttle_update_media_list = _throttle(this.update_media_list, 2000)
+    this.throttle_update_explorer = _throttle(this.update_explorer, 2000)
   },
 
   methods: {
@@ -128,10 +126,10 @@ export default {
       this.list
         .filter(t => t.status === STATUS.IDLE)
         .slice(0, free_count)
-        .forEach(t => t.is_large ? this.upload_large_file(t) : this.upload_file(t))
+        .forEach(t => t.is_large ? this.upload_large_file(t) : this.upload_small_file(t))
     },
 
-    async upload_file (task) {
+    async upload_small_file (task) {
       task.status = STATUS.RUNNING
 
       const form_data = new FormData()
@@ -140,14 +138,14 @@ export default {
       form_data.append('file', task.file)
 
       try {
-        const { data } = await axios.post('/media/upload', form_data, {
+        const { data } = await axios.post('/storage/small-upload', form_data, {
           onUploadProgress (ev) { task.progress = _floor(_clamp(ev.loaded / ev.total * 100, 0, 100), 2) }
         })
 
         if (data.errors) { throw new Error('上传失败') }
 
         this.$notify.success({ title: '上传成功', message: task.name })
-        this.throttle_update_media_list(task)
+        this.throttle_update_explorer(task)
         this.remove_task(task)
       } catch (e) {
         task.status = STATUS.ERROR
@@ -169,7 +167,7 @@ export default {
         await this.combine_chunks(task)
 
         this.$notify.success({ title: '上传成功', message: task.name })
-        this.throttle_update_media_list(task)
+        this.throttle_update_explorer(task)
         this.remove_task(task)
       } catch (e) {
         task.status = STATUS.ERROR
@@ -180,13 +178,11 @@ export default {
     },
 
     async create_upload_task (task) {
-      const { data } = await axios.post('/media/upload/task', {
+      const { data } = await axios.post('/storage/large-upload', {
         folder_id: task.folder_id,
-        upload: {
-          md5: task.md5,
-          filename: task.name,
-          size: task.size
-        }
+        md5: task.md5,
+        filename: task.name,
+        size: task.size
       })
 
       if (data.errors) { throw new Error('创建大文件任务失败') }
@@ -209,7 +205,7 @@ export default {
         form_data.append('chunk', task.file.slice(chunk.offset, chunk.offset + chunk.size))
 
         try {
-          const { data } = await axios.post('/media/upload/chunk', form_data, {
+          const { data } = await axios.post('/storage/chunk', form_data, {
             onUploadProgress (ev) {
               chunk.progress = _floor(_clamp(ev.loaded / ev.total * 100, 0, 100), 2)
               task.progress = _floor(_clamp(task.chunks.reduce((acc, c) => acc + c.progress, 0) / task.chunks.length, 0, 100), 2)
@@ -227,16 +223,16 @@ export default {
     async combine_chunks (task) {
       if (task.chunks.some(c => !c.loaded)) { throw new Error('分块未上传完') }
 
-      const { data } = await axios.post('/media/upload/combine', {
+      const { data } = await axios.post('/storage/combine', {
         upload_id: task.upload_id
       })
 
       if (data.errors) { throw new Error('合并分块失败') }
     },
 
-    update_media_list (task) {
-      if (this.media_center.$refs.media_list.current_folder_id === task.folder_id) {
-        this.media_center.$refs.media_list.load()
+    update_explorer (task) {
+      if (this.$root.$refs.explorer.current_folder_id === task.folder_id) {
+        this.$root.$refs.explorer.load()
       }
     },
 

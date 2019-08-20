@@ -8,9 +8,15 @@ defmodule WingmanWeb.StorageView do
       files: render_many(files, __MODULE__, "file.json", as: :file)}
   end
 
+  def render("ls_folders.json", %{folders: folders}) do
+    render_many(folders, __MODULE__, "folder.json", as: :folder)
+  end
+
   def render("folder.json", %{folder: folder}) do
     %{id: folder.id,
-      name: folder.name}
+      name: folder.name,
+      lft: folder.lft,
+      rgt: folder.rgt}
   end
 
   def render("file.json", %{file: file}) do

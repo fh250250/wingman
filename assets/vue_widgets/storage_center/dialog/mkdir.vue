@@ -1,7 +1,7 @@
 <template>
 <el-dialog
     :visible.sync="visible"
-    title="重命名文件"
+    title="创建目录"
     width="500px"
     append-to-body
     :close-on-click-modal="!loading"
@@ -11,7 +11,7 @@
   <el-input
     ref="name_input"
     v-model="name"
-    placeholder="请输入文件名"
+    placeholder="请输入目录名"
     :disabled="loading"
     @keydown.enter.native="submit"/>
 
@@ -29,15 +29,13 @@ export default {
     return {
       visible: false,
       loading: false,
-      id: null,
       name: ''
     }
   },
 
   methods: {
-    open (file) {
-      this.id = file.id
-      this.name = file.name
+    open () {
+      this.name = ''
       this.visible = true
     },
 
@@ -49,16 +47,16 @@ export default {
       if (!this.name) { return }
 
       this.loading = true
-      const { data } = await axios.post('/media/file', {
-        id: this.id,
-        file: { name: this.name }
+      const { data } = await axios.post('/storage/mkdir', {
+        folder_id: this.$parent.current_folder_id,
+        name: this.name
       })
       this.loading = false
 
       if (data.errors) {
         this.$helper.json_error_message(data.errors)
       } else {
-        this.$message.success('重命名文件成功')
+        this.$message.success('创建目录成功')
         this.visible = false
         this.$parent.load()
       }
