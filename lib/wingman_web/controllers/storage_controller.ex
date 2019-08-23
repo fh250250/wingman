@@ -10,6 +10,12 @@ defmodule WingmanWeb.StorageController do
     render(conn, "index.html")
   end
 
+  def show_file(conn, %{"id" => file_id}) do
+    with {:ok, file} <- find_file_by_id(file_id) do
+      render(conn, "file.json", file: file)
+    end
+  end
+
   def ls(conn, %{"folder_id" => folder_id}) do
     with {:ok, folder} <- find_folder_by_id(folder_id),
          {folders, files} <- Storage.ls(folder)

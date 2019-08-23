@@ -9,8 +9,8 @@ defmodule Wingman.Movie.Film do
   schema "movie_films" do
     field :title, :string
     field :desc, :string
-    field :poster, :string
-    field :video, :string
+    field :poster_id, :id
+    field :video_id, :id
 
     many_to_many :tags, Tag, join_through: "movie_films_tags", on_replace: :delete
 
@@ -20,9 +20,11 @@ defmodule Wingman.Movie.Film do
   @doc false
   def changeset(film, attrs) do
     film
-    |> cast(attrs, [:title, :desc, :poster, :video])
-    |> validate_required([:title])
+    |> cast(attrs, [:title, :desc, :poster_id, :video_id])
+    |> validate_required([:title, :poster_id, :video_id])
     |> unique_constraint(:title)
+    |> foreign_key_constraint(:poster_id)
+    |> foreign_key_constraint(:video_id)
   end
 
   def change_tags(changeset, attrs) do

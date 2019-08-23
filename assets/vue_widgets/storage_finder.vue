@@ -57,8 +57,7 @@ import {
   last as _last,
   get as _get,
   find as _find,
-  isFunction as _isFunction,
-  pick as _pick
+  isFunction as _isFunction
 } from 'lodash'
 
 export default {
@@ -149,13 +148,12 @@ export default {
 
       this.visible = false
 
-      const file_keys = ['id', 'name', 'content_type', 'size', 'url']
       const result = this.is_multi_select
-                      ? this.selected_files.map(f => _pick(f, file_keys))
-                      : _pick(this.selected_files[0], file_keys)
+                    ? this.selected_files.map(f => f.id)
+                    : this.selected_files[0].id
 
       if (_isFunction(this._open_callback)) {
-        this._open_callback(JSON.parse(JSON.stringify(result)))
+        this._open_callback(result)
       }
     }
   }

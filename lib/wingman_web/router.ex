@@ -25,6 +25,7 @@ defmodule WingmanWeb.Router do
 
     scope "/storage" do
       get "/", StorageController, :index
+      get "/file/:id", StorageController, :show_file
 
       post "/ls", StorageController, :ls
       post "/ls-folders", StorageController, :ls_folders

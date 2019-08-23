@@ -21,7 +21,7 @@ defmodule WingmanWeb.Movie.FilmController do
     case Movie.create_film(film_params) do
       {:ok, _film} ->
         conn
-        |> put_flash(:success, "Film created successfully.")
+        |> put_flash(:success, "创建成功")
         |> redirect(to: Routes.movie_film_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -35,7 +35,7 @@ defmodule WingmanWeb.Movie.FilmController do
   end
 
   def edit(conn, %{"id" => id}) do
-    film = Movie.get_film!(id, :with_tags)
+    film = Movie.get_film!(id)
     changeset = Movie.change_film(film)
 
     conn
@@ -47,12 +47,12 @@ defmodule WingmanWeb.Movie.FilmController do
   end
 
   def update(conn, %{"id" => id, "film" => film_params}) do
-    film = Movie.get_film!(id, :with_tags)
+    film = Movie.get_film!(id)
 
     case Movie.update_film(film, film_params) do
       {:ok, _film} ->
         conn
-        |> put_flash(:success, "Film updated successfully.")
+        |> put_flash(:success, "更新成功")
         |> redirect(to: Routes.movie_film_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -71,7 +71,7 @@ defmodule WingmanWeb.Movie.FilmController do
     {:ok, _film} = Movie.delete_film(film)
 
     conn
-    |> put_flash(:success, "Film deleted successfully.")
+    |> put_flash(:success, "删除成功")
     |> redirect(to: Routes.movie_film_path(conn, :index))
   end
 end

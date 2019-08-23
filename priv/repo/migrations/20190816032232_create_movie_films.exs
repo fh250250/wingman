@@ -5,8 +5,8 @@ defmodule Wingman.Repo.Migrations.CreateMovieFilms do
     create table(:movie_films) do
       add :title, :string, null: false
       add :desc, :text
-      add :poster, :text
-      add :video, :text
+      add :poster_id, references(:storage_files), null: false
+      add :video_id, references(:storage_files), null: false
 
       timestamps()
     end

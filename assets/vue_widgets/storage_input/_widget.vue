@@ -1,12 +1,12 @@
 <template>
-<div class="media-input">
-  <input type="hidden" :name="form_name" :value="input_value">
+<div class="storage-input">
+  <input type="hidden" :name="form_name" :value="form_value">
 
-  <div v-if="has_file" class="file-box">
+  <div v-if="form_value" class="file-box" v-loading="loading">
     <div class="left">
       <el-image v-if="$helper.is_image(file.content_type)"
-          :src="file.path"
-          :preview-src-list="[file.path]"
+          :src="file.url"
+          :preview-src-list="[file.url]"
           fit="cover"/>
       <i v-else class="el-icon-document"/>
     </div>
@@ -28,53 +28,58 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data () {
     return {
       form_name: null,
       form_value: null,
+      loading: false,
       file: {
-        id: null,
         name: '',
         content_type: '',
         size: 0,
-        path: ''
+        url: ''
       }
     }
   },
 
   created () {
-    if (this.form_value) {
-      this.file = JSON.parse(this.form_value)
-    }
-  },
-
-  computed: {
-    input_value () {
-      return this.file.id ? JSON.stringify(this.file) : null
-    },
-
-    has_file () {
-      return !!this.file.id
-    }
+    this.load()
   },
 
   methods: {
-    find_file () {
-      window.media_finder.open({ on_change: this.handle_file_change })
+    async load () {
+      if (!this.form_value) { return }
+
+      this.loading = true
+      const { data } = await axios.get(`/storage/file/${this.form_value}`)
+      this.loading = false
+
+      this.file.name = data.name
+      this.file.content_type = data.content_type
+      this.file.size = data.size
+      this.file.url = data.url
     },
 
-    handle_file_change (file) {
-      this.file = file
+    find_file () {
+      window.storage_finder.open({ on_change: this.handle_file_change })
+    },
+
+    handle_file_change (file_id) {
+      this.form_value = file_id
+
+      this.load()
     },
 
     clear_file () {
+      this.form_value = null
       this.file = {
-        id: null,
         name: '',
         content_type: '',
         size: 0,
-        path: ''
+        url: ''
       }
     }
   }
@@ -82,7 +87,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.media-input {
+.storage-input {
   .no-file {
     width: 200px;
     height: 100px;

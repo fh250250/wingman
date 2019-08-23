@@ -7,8 +7,8 @@
         <%= tags_assoc_input f, :tag_ids, @tag_groups, @tag_ids %>
       </div>
       <div class="col-md-6">
-        <%= media_input f, :poster, "封面图片" %>
-        <%= media_input f, :video, "视频文件" %>
+        <%= storage_input f, :poster_id, "封面图片" %>
+        <%= storage_input f, :video_id, "视频文件" %>
       </div>
     </div>
   </div>

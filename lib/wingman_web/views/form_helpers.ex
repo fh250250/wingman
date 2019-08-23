@@ -28,13 +28,13 @@ defmodule WingmanWeb.FormHelpers do
     end
   end
 
-  def media_input(form, field, label_text) do
+  def storage_input(form, field, label_text) do
     wrapper_opts = [class: "form-group #{state_class(form, field)}"]
 
     content_tag :div, wrapper_opts do
       [
         label(form, field, label_text),
-        WidgetHelpers.vue_widget(:media_input, %{
+        WidgetHelpers.vue_widget(:storage_input, %{
           form_name: input_name(form, field),
           form_value: input_value(form, field)
         }),

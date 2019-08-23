@@ -272,7 +272,7 @@ defmodule Wingman.Storage do
   @spec rm(file :: StorageFile.t) :: :ok | {:error, Ecto.Changeset.t | String.t}
   def rm(%StorageFile{} = file) do
     Ecto.Multi.new()
-    |> Ecto.Multi.delete(:delete, file)
+    |> Ecto.Multi.delete(:delete, StorageFile.delete_changeset(file))
     |> Ecto.Multi.run(:remove, fn _repo, _changes ->
       Path.join(@storage_config[:root_path], file.path)
       |> File.rm()

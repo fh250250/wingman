@@ -13,8 +13,7 @@ defmodule Wingman.Movie do
     Repo.all(Film)
   end
 
-  def get_film!(id), do: Repo.get!(Film, id)
-  def get_film!(id, :with_tags), do: get_film!(id) |> Repo.preload(:tags)
+  def get_film!(id), do: Repo.get!(Film, id) |> Repo.preload(:tags)
 
   def create_film(attrs \\ %{}) do
     %Film{}
@@ -48,8 +47,7 @@ defmodule Wingman.Movie do
     TagGroup |> Repo.all() |> Repo.preload(:tags)
   end
 
-  def get_tag_group!(id), do: Repo.get!(TagGroup, id)
-  def get_tag_group!(id, :with_tags), do: get_tag_group!(id) |> Repo.preload(:tags)
+  def get_tag_group!(id), do: Repo.get!(TagGroup, id) |> Repo.preload(:tags)
 
   def create_tag_group(attrs \\ %{}) do
     %TagGroup{}

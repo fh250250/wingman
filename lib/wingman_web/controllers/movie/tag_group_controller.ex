@@ -18,7 +18,7 @@ defmodule WingmanWeb.Movie.TagGroupController do
     case Movie.create_tag_group(tag_group_params) do
       {:ok, _tag_group} ->
         conn
-        |> put_flash(:success, "Tag group created successfully.")
+        |> put_flash(:success, "创建成功")
         |> redirect(to: Routes.movie_tag_group_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -29,18 +29,18 @@ defmodule WingmanWeb.Movie.TagGroupController do
   end
 
   def edit(conn, %{"id" => id}) do
-    tag_group = Movie.get_tag_group!(id, :with_tags)
+    tag_group = Movie.get_tag_group!(id)
     changeset = Movie.change_tag_group(tag_group)
     render(conn, "edit.html", tag_group: tag_group, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "tag_group" => tag_group_params}) do
-    tag_group = Movie.get_tag_group!(id, :with_tags)
+    tag_group = Movie.get_tag_group!(id)
 
     case Movie.update_tag_group(tag_group, tag_group_params) do
       {:ok, _tag_group} ->
         conn
-        |> put_flash(:success, "Tag group updated successfully.")
+        |> put_flash(:success, "更新成功")
         |> redirect(to: Routes.movie_tag_group_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -55,7 +55,7 @@ defmodule WingmanWeb.Movie.TagGroupController do
     {:ok, _tag_group} = Movie.delete_tag_group(tag_group)
 
     conn
-    |> put_flash(:success, "Tag group deleted successfully.")
+    |> put_flash(:success, "删除成功")
     |> redirect(to: Routes.movie_tag_group_path(conn, :index))
   end
 end
