@@ -61,8 +61,6 @@ import {
 } from 'lodash'
 
 export default {
-  el: '#storage_finder',
-
   data () {
     return {
       visible: false,

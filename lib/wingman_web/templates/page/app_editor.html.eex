@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <title>Wingman</title>
+
+  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app_editor.css") %>">
+</head>
+<body>
+  <div id="app_editor"></div>
+  <div id="storage_finder"></div>
+
+  <script>window._csrf_token = '<%= Phoenix.Controller.get_csrf_token() %>'</script>
+  <script src="<%= Routes.static_path(@conn, "/js/app_editor.js") %>"></script>
+</body>
+</html>

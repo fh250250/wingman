@@ -13,7 +13,8 @@ module.exports = {
     ]
   },
   entry: {
-    app: path.resolve(__dirname, 'js/app.js')
+    app: path.resolve(__dirname, 'js/app.js'),
+    app_editor: path.resolve(__dirname, 'js/app_editor.js')
   },
   output: {
     filename: 'js/[name].js',

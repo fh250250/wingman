@@ -17,6 +17,7 @@ defmodule WingmanWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/app-editor", PageController, :app_editor
 
     scope "/movie", Movie, as: :movie do
       resources "/films", FilmController, except: [:show]

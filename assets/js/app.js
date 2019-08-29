@@ -37,6 +37,7 @@ vue_widgets.keys().forEach(key => {
 
 // storage_finder
 window.storage_finder = new Vue(require('@/vue_widgets/storage_finder').default)
+window.storage_finder.$mount('#storage_finder')
 
 // 初始化所有 iCheck
 $('[data-icheck]').each(function () {
