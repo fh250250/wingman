@@ -6,13 +6,18 @@ body {
   text-rendering: optimizeLegibility;
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.5;
   color: #333;
-  background: #f0f0f0;
+  background: white;
 }
 
 html, body, #app_editor {
   height: 100%;
+}
+
+.custom-scrollbar {
+  &::-webkit-scrollbar { width: 4px; height: 4px; }
+  &::-webkit-scrollbar-thumb { background-color: #ccc; }
 }
 
 // Copy from bootstrap
