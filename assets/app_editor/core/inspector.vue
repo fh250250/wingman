@@ -58,6 +58,7 @@ export default {
   display: flex;
   flex-direction: column;
   .inspector-tab {
+    user-select: none;
     font-size: 12px;
     flex: 0 0 auto;
     display: flex;

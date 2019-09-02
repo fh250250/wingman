@@ -70,7 +70,7 @@ export default {
 
 <style lang="scss" scoped>
 .page-list {
-  height: 55%;
+  height: 50%;
   box-sizing: border-box;
   border-bottom: 1px solid #ccc;
   display: flex;
