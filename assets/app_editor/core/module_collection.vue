@@ -4,7 +4,11 @@
   <div class="module-collection-body custom-scrollbar">
     <el-collapse>
       <el-collapse-item v-for="c of category_list" :key="c" :title="c" :name="c">
-        kjdfs
+        <div class="module-list">
+          <div class="module" v-for="m of find_module_list_by_category(c)" :key="m.module_name">
+            {{ m.meta.title }}
+          </div>
+        </div>
       </el-collapse-item>
     </el-collapse>
   </div>
@@ -12,13 +16,25 @@
 </template>
 
 <script>
-import { map as _map, uniq as _uniq } from 'lodash'
+import { map as _map, flatMap as _flatMap, uniq as _uniq, includes as _includes } from 'lodash'
 import registered_modules from './registered_modules'
 
 export default {
   data () {
     return {
-      category_list: _uniq(_map(registered_modules, m => m.meta().category))
+      module_list: _map(registered_modules, (m, module_name) => ({ module_name, meta: m.meta() }))
+    }
+  },
+
+  computed: {
+    category_list () {
+      return _uniq(_flatMap(this.module_list, 'meta.category'))
+    }
+  },
+
+  methods: {
+    find_module_list_by_category (category) {
+      return this.module_list.filter(m => _includes(m.meta.category, category))
     }
   }
 }
@@ -30,13 +46,13 @@ export default {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  user-select: none;
   &-header {
     flex: 0 0 auto;
     font-size: 12px;
     padding: 5px 10px;
     background-color: #f0f0f0;
     border-bottom: 1px solid #ccc;
-    user-select: none;
   }
   &-body {
     flex: 1 1 auto;
@@ -55,6 +71,13 @@ export default {
       font-size: 12px;
       color: #333;
       line-height: 1.5;
+    }
+  }
+  .module-list {
+    lost-flex-container: row;
+    .module {
+      lost-waffle: 1/4 4 10px flex;
+      background-color: grey;
     }
   }
 }

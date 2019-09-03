@@ -3,8 +3,8 @@ export function preview_component () { return require('./preview').default }
 
 export function meta () {
   return {
-    label: '测试模块 C',
-    category: '测试 1'
+    title: '测试模块 C',
+    category: ['分类1', '分类3']
   }
 }
 
