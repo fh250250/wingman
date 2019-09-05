@@ -4,11 +4,15 @@
   <div class="module-collection-body custom-scrollbar">
     <el-collapse>
       <el-collapse-item v-for="c of category_list" :key="c" :title="c" :name="c">
-        <div class="module-list">
+        <draggable class="module-list"
+            :value="find_module_list_by_category(c)"
+            :sort="false"
+            :group="{ name: 'module_list', pull: 'clone', put: false }"
+            :clone="clone_module">
           <div class="module" v-for="m of find_module_list_by_category(c)" :key="m.module_name">
             {{ m.meta.title }}
           </div>
-        </div>
+        </draggable>
       </el-collapse-item>
     </el-collapse>
   </div>
@@ -16,10 +20,14 @@
 </template>
 
 <script>
+import unique_string from 'unique-string'
 import { map as _map, flatMap as _flatMap, uniq as _uniq, includes as _includes } from 'lodash'
+import draggable from 'vuedraggable'
 import registered_modules from './registered_modules'
 
 export default {
+  components: { draggable },
+
   data () {
     return {
       module_list: _map(registered_modules, (m, module_name) => ({ module_name, meta: m.meta() }))
@@ -35,6 +43,16 @@ export default {
   methods: {
     find_module_list_by_category (category) {
       return this.module_list.filter(m => _includes(m.meta.category, category))
+    },
+
+    clone_module ({ module_name }) {
+      const spec = registered_modules[module_name]
+
+      return {
+        id: unique_string(),
+        module_name,
+        config: spec.config_data()
+      }
     }
   }
 }
@@ -76,8 +94,12 @@ export default {
   .module-list {
     lost-flex-container: row;
     .module {
-      lost-waffle: 1/4 4 10px flex;
+      lost-waffle: 1/3 3 10px flex;
       background-color: grey;
+      color: white;
+      height: 80px;
+      line-height: 80px;
+      text-align: center;
     }
   }
 }

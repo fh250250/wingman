@@ -10,3 +10,11 @@ export default {
   props: ['config']
 }
 </script>
+
+<style lang="scss" scoped>
+.module-test-a {
+  padding: 40px 20px;
+  text-align: center;
+  background-color: wheat;
+}
+</style>
