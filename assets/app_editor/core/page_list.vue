@@ -60,7 +60,11 @@ export default {
     },
 
     inspect_page (page) {
-      this.$root.inspected_page_id = page.id
+      if (page.id !== this.$root.inspected_page_id) {
+        this.$root.inspected_page_id = page.id
+        this.$root.inspected_module_id = null
+      }
+
       this.$root.change_inspector_tab('page')
     }
   }

@@ -12,10 +12,11 @@
           group="module_list"
           handle=".module-move-handle"
           @add="handle_module_add">
-        <div class="module" v-for="m of inspected_page.module_list" :key="m.id">
+        <div class="module"
+            v-for="m of inspected_page.module_list"
+            :key="m.id"
+            :class="{ inspected: is_inspected(m) }">
           <component :is="module_preview_component(m.module_name)" :config="m.config"/>
-
-          <div class="module-inspected" v-if="is_inspected(m)"/>
 
           <div class="module-tools">
             <i class="el-icon-setting" @click="inspect_module(m)"/>
@@ -53,7 +54,10 @@ export default {
     },
 
     inspect_module (m) {
-      this.$root.inspected_module_id = m.id
+      if (m.id !== this.$root.inspected_module_id) {
+        this.$root.inspected_module_id = m.id
+      }
+
       this.$root.change_inspector_tab('module')
     },
 
@@ -103,14 +107,9 @@ export default {
       min-height: 100%;
       .module {
         position: relative;
-        &-inspected {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          box-sizing: border-box;
-          border: 4px dashed $--color-primary;
+        &.inspected {
+          outline: 4px dashed $--color-primary;
+          outline-offset: -4px;
         }
         &-tools {
           position: absolute;
