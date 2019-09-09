@@ -1,5 +1,6 @@
 export function module_name () { return 'test_b' }
 export function preview_component () { return require('./preview').default }
+export function inspector_component () { return require('./inspector').default }
 
 export function meta () {
   return {
@@ -9,9 +10,7 @@ export function meta () {
 }
 
 export function config_data () {
-  return {}
-}
-
-export function inspector_data () {
-  return {}
+  return {
+    test_b: 'b'
+  }
 }

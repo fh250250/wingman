@@ -51,8 +51,7 @@ export default {
       if (!this.$root.app_data.main_page) { this.$root.app_data.main_page = new_page.id }
 
       // 审查新加页面
-      this.$root.inspected_page_id = new_page.id
-      this.$root.change_inspector_tab('page')
+      this.inspect_page(new_page)
 
       // 滚动到底部
       this.$nextTick(() => {

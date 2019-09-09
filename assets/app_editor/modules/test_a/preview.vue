@@ -1,18 +1,18 @@
 <template>
-<div class="module-test-a">
-  module_test_a
+<div class="test-a-preview">
+  test_a_preview
 </div>
 </template>
 
 <script>
 export default {
-  name: 'module_test_a',
+  name: 'test_a_preview',
   props: ['config']
 }
 </script>
 
 <style lang="scss" scoped>
-.module-test-a {
+.test-a-preview {
   padding: 40px 20px;
   text-align: center;
   background-color: wheat;

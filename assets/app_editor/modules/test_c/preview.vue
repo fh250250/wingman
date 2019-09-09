@@ -1,19 +1,19 @@
 <template>
-<div class="module-test-c">
-  module_test_c
+<div class="test-c-preview">
+  test_c_preview
 </div>
 </template>
 
 <script>
 export default {
-  name: 'module_test_c',
+  name: 'test_c_preview',
   props: ['config']
 }
 </script>
 
 <style lang="scss" scoped>
-.module-test-c {
-  padding: 40px 20px;
+.test-c-preview {
+  padding: 50px 20px;
   text-align: center;
   background-color: tomato;
   color: white;

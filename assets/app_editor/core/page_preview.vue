@@ -10,12 +10,15 @@
       <draggable class="module-list"
           :list="inspected_page.module_list"
           group="module_list"
-          handle=".module-move-handle">
+          handle=".module-move-handle"
+          @add="handle_module_add">
         <div class="module" v-for="m of inspected_page.module_list" :key="m.id">
           <component :is="module_preview_component(m.module_name)" :config="m.config"/>
 
+          <div class="module-inspected" v-if="is_inspected(m)"/>
+
           <div class="module-tools">
-            <i class="el-icon-setting"/>
+            <i class="el-icon-setting" @click="inspect_module(m)"/>
             <i class="el-icon-rank module-move-handle"/>
             <i class="el-icon-delete"/>
           </div>
@@ -43,6 +46,21 @@ export default {
   methods: {
     module_preview_component (module_name) {
       return registered_modules[module_name].preview_component()
+    },
+
+    is_inspected (m) {
+      return this.$root.inspected_module_id === m.id
+    },
+
+    inspect_module (m) {
+      this.$root.inspected_module_id = m.id
+      this.$root.change_inspector_tab('module')
+    },
+
+    handle_module_add (ev) {
+      const new_module = this.inspected_page.module_list[ev.newIndex]
+
+      this.inspect_module(new_module)
     }
   }
 }
@@ -85,17 +103,24 @@ export default {
       min-height: 100%;
       .module {
         position: relative;
-        &:hover .module-tools { display: flex; }
+        &-inspected {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+          border: 4px dashed $--color-primary;
+        }
         &-tools {
           position: absolute;
           top: 0;
           right: 0;
           font-size: 20px;
-          display: none;
+          display: flex;
           background-color: rgba(0, 0, 0, .5);
           color: white;
           padding: 5px 10px;
-          border-radius: 0 0 0 5px;
           > *:not(:last-child) { margin-right: 10px; }
           .el-icon-setting { cursor: pointer; }
           .el-icon-rank { cursor: move; }
